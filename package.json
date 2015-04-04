@@ -1,0 +1,22 @@
+{
+  "name": "reactCalendar",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "browserify src/main.js -o build/main.js -t reactify",
+    "build-watch": "watchify src/main.js -o build/main.js -t reactify -v",
+    "browser-sync": "browser-sync start --server --files='build/main.js'"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "lodash": "^3.6.0",
+    "moment": "^2.9.0",
+    "react": "^0.13.1"
+  },
+  "devDependencies": {
+    "reactify": "^1.1.0"
+  }
+}
