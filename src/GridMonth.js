@@ -5,14 +5,8 @@ var GridDay = require('./GridDay');
 
 var GridMonth = React.createClass({
 
-  getInitialState: function () {
-    return {
-      momentDate: this.props.initialMomentDate
-    }
-  },
-
   render: function () {
-    var momentDate = this.state.momentDate;
+    var momentDate = this.props.momentDate;
     var monthName = momentDate.format('MMMM');
     var yearName = momentDate.format('YYYY');
 
@@ -20,7 +14,8 @@ var GridMonth = React.createClass({
 
     return (
       <div>
-        <h3 className="text-center">{monthName} - {yearName}</h3>{dayBlocks}
+        <h3>{monthName} - {yearName}</h3>
+        {dayBlocks}
       </div>
     )
   }
