@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "browserify src/main.js -o build/main.js -t reactify",
-    "watch": "watchify src/main.js -o build/main.js -t reactify -v",
+    "build": "browserify src/main.js -o build/main.js -t babelify",
+    "watch": "watchify src/main.js -o build/main.js -t babelify -v",
     "server": "browser-sync start --server --files='build/main.js'"
   },
   "author": "",
@@ -17,6 +17,6 @@
     "react": "^0.13.1"
   },
   "devDependencies": {
-    "reactify": "^1.1.0"
+    "babelify": "^6.0.2"
   }
 }
