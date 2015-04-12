@@ -1,0 +1,20 @@
+{
+  "name": "reactCalendar",
+  "version": "0.0.0",
+  "authors": [
+    "Erik Aybar <erikthedeveloper@gmail.com>"
+  ],
+  "moduleType": [
+    "node"
+  ],
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {}
+}

@@ -6,8 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "browserify src/main.js -o build/main.js -t reactify",
-    "build-watch": "watchify src/main.js -o build/main.js -t reactify -v",
-    "browser-sync": "browser-sync start --server --files='build/main.js'"
+    "watch": "watchify src/main.js -o build/main.js -t reactify -v",
+    "server": "browser-sync start --server --files='build/main.js'"
   },
   "author": "",
   "license": "ISC",
