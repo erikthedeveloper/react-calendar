@@ -1,30 +1,52 @@
-var React = require('react');
+var React  = require('react');
+var _      = require('lodash');
 var moment = require('moment');
+
+var styles = {
+  gridBlock: {
+    height: 150,
+    width: 150,
+    float: 'left',
+    border: '1px solid gray',
+    position: 'relative'
+  },
+  date: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    padding: 10
+  }
+};
 
 var GridDay = React.createClass({
 
   render: function() {
-    var dayFormatted = this.props.momentDate.format('ddd Do');
-    var styles = {
-      height: 100,
-      width: 100,
-      float: 'left',
-      border: '1px solid gray',
-      boxSizing: 'border-box'
-    };
-    if (this.props.momentDate.day() === 0) {
-      styles.clear = 'left';
-    }
-    if (this.props.momentDate.date() === 1) {
-      styles.marginLeft = 100 * (this.props.momentDate.day());
-    }
+
+    var _moment = this.props.curMoment;
+    var _styles = _.assign({}, styles.gridBlock);
+    if (_moment.day() === 0)
+      _styles.clear = 'left';
+
     return (
-      <div style={styles}>
-        <h3>{dayFormatted}</h3>
+      <div style={_styles}>
+        <span style={styles.date}>{_moment.format('Do')}</span>
+        <ul className="list-unstyled" style={{marginTop: 30, marginLeft: 10}}>
+        {this.props.events.map(function (event) { return <li className="label label-info" style={{display: 'inline-block'}}>{event.title}</li>; })}
+        </ul>
       </div>
     )
   }
 
 });
 
+var GridDayDummy = React.createClass({
+  render: function () {
+    return (
+      <div style={styles.gridBlock}>
+      </div>
+    )
+  }
+});
+
 module.exports = GridDay;
+module.exports.GridDayDummy = GridDayDummy;

@@ -3,23 +3,11 @@ var moment = require('moment');
 
 var GridMonth = require('./GridMonth');
 
-var DetailsPain = React.createClass({
-
-  render: function () {
-    return (
-      <div>
-        Hola
-      </div>
-    )
-  }
-
-});
-
-module.exports = React.createClass({
+var Calendar = React.createClass({
 
   getInitialState: function () {
     return {
-      momentDate: moment()
+      curMoment: moment()
     }
   },
 
@@ -28,21 +16,23 @@ module.exports = React.createClass({
     return (
       <div>
 
-        <a onClick={this.prevMonth}>Prev</a>
-        <a onClick={this.nextMonth}>Next</a>
+        <a onClick={this.prevMonth}><span className="glyphicon glyphicon-arrow-left"></span></a>
+        <a onClick={this.nextMonth}><span className="glyphicon glyphicon-arrow-right"></span></a>
 
-        <GridMonth momentDate={this.state.momentDate} />
+        <GridMonth curMoment={this.state.curMoment} eventData={this.props.eventData}/>
 
       </div>
     )
   },
 
   prevMonth: function () {
-    this.setState({momentDate: this.state.momentDate.subtract(1, 'month')})
+    this.setState({curMoment: this.state.curMoment.subtract(1, 'month')})
   },
 
   nextMonth: function () {
-    this.setState({momentDate: this.state.momentDate.add(1, 'month')})
+    this.setState({curMoment: this.state.curMoment.add(1, 'month')})
   }
 
 });
+
+module.exports = Calendar;

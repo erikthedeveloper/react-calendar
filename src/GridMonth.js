@@ -1,43 +1,51 @@
 var React = require('react');
 var moment = require('moment');
 
-var GridDay = require('./GridDay');
+var GridDay  = require('./GridDay');
+var DummyDay = require('./GridDay').GridDayDummy;
 
 var GridMonth = React.createClass({
 
   render: function () {
-    var momentDate = this.props.momentDate;
-    var monthName = momentDate.format('MMMM');
-    var yearName = momentDate.format('YYYY');
-
-    var dayBlocks = _dayBlocksForMonth(momentDate);
+    var _moment = this.props.curMoment;
+    var dayBlocks = _dayBlocksForMonth.call(this, _moment);
 
     return (
       <div>
-        <h3>{monthName} - {yearName}</h3>
+        <h3>{_moment.format('MMMM')} - {_moment.format('YYYY')}</h3>
         {dayBlocks}
       </div>
     )
-  }
+  },
 
+  eventsForDay: function (dayMoment) {
+    var e = this.props.eventData;
+    var m = dayMoment;
+    return (e[m.year()] && e[m.year()][m.month()] && e[m.year()][m.month()][m.date()])
+      ? e[m.year()][m.month()][m.date()]
+      : [];
+  }
 });
 
-function _dayBlocksForMonth(momentDate) {
+function _dayBlocksForMonth(monthMoment) {
 
-  var dayBlockComponents = [];
-  var daysInMonth = momentDate.daysInMonth();
-  var dayMoment;
-  var i;
+  var days = [];
+  var daysInMonth = monthMoment.daysInMonth();
 
-  for (i = 0; i < daysInMonth; i++) {
-    dayMoment = momentDate.clone();
-    dayMoment.date(i + 1);
-    dayBlockComponents.push(<GridDay
-      momentDate={dayMoment}
-      />);
+  var padDays = function (daysToPad) {
+    while (daysToPad--) days.push(<DummyDay />);
+  };
+
+  padDays(monthMoment.clone().date(1).day());
+
+  for (var i = 0; i < daysInMonth; i++) {
+    var dayMoment = moment(monthMoment).date(i + 1);
+    days.push(<GridDay curMoment={dayMoment} events={this.eventsForDay(dayMoment)} />);
   }
 
-  return dayBlockComponents;
+  padDays(6 - monthMoment.clone().date(daysInMonth).day());
+
+  return days;
 }
 
 module.exports = GridMonth;
