@@ -31,7 +31,8 @@ var GridDay = React.createClass({
       <div style={_styles}>
         <span style={styles.date}>{_moment.format('Do')}</span>
         <ul className="list-unstyled" style={{marginTop: 30, marginLeft: 10}}>
-        {this.props.events.map(function (event) { return <li className="label label-info" style={{display: 'inline-block'}}>{event.title}</li>; })}
+        {this.props.events.map((event) =>
+          <li className="label label-info" style={{display: 'inline-block'}}>{event.title}</li>)}
         </ul>
       </div>
     )
