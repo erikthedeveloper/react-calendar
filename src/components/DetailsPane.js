@@ -48,7 +48,7 @@ var DetailsPane = React.createClass({
                       <h5>{day.format('ddd Do')}</h5>
                       <ul>
                         {monthEvents[day.date()].map((event) =>
-                          <li>{event.title}</li>)}
+                          <li onClick={this.removeEvent.bind(null, event)} style={{cursor: 'pointer'}}>{event.title}</li>)}
                       </ul>
                     </div>)
             }
@@ -63,9 +63,11 @@ var DetailsPane = React.createClass({
               {backArrow}
               {curMoment.format('MMMM ddd Do')}
             </h3>
+            <input onSubmit={this.addEvent} ref="newEventTitle" type="text" className="form-control input-md" />
+            <button onClick={this.addEvent} className="btn btn-md btn-block btn-primary">Add Event</button>
             <ul>
             {dayEvents.map((event) =>
-              <li>{event.title}</li>) }
+              <li onClick={this.removeEvent.bind(null, event)} style={{cursor: 'pointer'}}>{event.title}</li>) }
             </ul>
           </div>
         );
@@ -91,6 +93,21 @@ var DetailsPane = React.createClass({
           </div>
         );
     }
+  },
+
+  addEvent() {
+    var newEventData = {
+      title: React.findDOMNode(this.refs['newEventTitle']).value
+    };
+
+    this.props.eventData.addEvent(newEventData, this.props.curMoment);
+    React.findDOMNode(this.refs['newEventTitle']).value = "";
+    React.findDOMNode(this.refs['newEventTitle']).focus();
+
+  },
+
+  removeEvent(targetEvent) {
+    this.props.eventData.removeEvent(targetEvent);
   }
 
 });

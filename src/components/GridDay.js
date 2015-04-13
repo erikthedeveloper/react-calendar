@@ -8,7 +8,9 @@ var styles = {
     width: 100/7 + "%",
     float: 'left',
     border: '1px solid gray',
-    position: 'relative'
+    position: 'relative',
+    overflow: 'scroll',
+    cursor: 'pointer'
   },
   date: {
     position: 'absolute',
@@ -21,7 +23,8 @@ var styles = {
     maxWidth:     "100%",
     whiteSpace:   "nowrap",
     overflow:     "hidden",
-    textOverflow: "ellipsis"
+    textOverflow: "ellipsis",
+    cursor: 'pointer'
   }
 };
 
