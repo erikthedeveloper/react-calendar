@@ -5,43 +5,53 @@ var moment = require('moment');
 var GridDay  = require('./GridDay');
 var DummyDay = require('./GridDay').GridDayDummy;
 
+var styles = {
+  dayHeading: {
+    float: 'left',
+    width: 100/7 + '%',
+    textAlign: 'center'
+  }
+};
+
 var GridMonth = React.createClass({
 
   render: function () {
+    var monthMoment = this.props.curMoment;
     return (
       <div>
-        {_dayBlocksForMonth.call(this, this.props.curMoment)}
+        {moment.weekdaysShort().map((day) =>
+          <div style={styles.dayHeading}>{day}</div>)}
+        {this.renderDayBlocks(monthMoment)}
       </div>
     )
   },
 
-});
+  renderDayBlocks(monthMoment) {
+    var dayBlocks = [];
+    var daysInMonth = monthMoment.daysInMonth();
+    var eventData   = this.props.eventData;
 
-function _dayBlocksForMonth(monthMoment) {
+    var padDays = function (daysToPad) {
+      while (daysToPad--) dayBlocks.push(<DummyDay />);
+    };
 
-  var days = [];
-  var daysInMonth = monthMoment.daysInMonth();
-  var eventData   = this.props.eventData;
+    padDays(monthMoment.clone().date(1).day());
 
-  var padDays = function (daysToPad) {
-    while (daysToPad--) days.push(<DummyDay />);
-  };
+    for (var i = 1; i <= daysInMonth; i++) {
+      var dayMoment = moment(monthMoment).date(i);
+      dayBlocks.push(<GridDay
+        curMoment={dayMoment}
+        events={eventData.eventsForDay(dayMoment)}
+        onClick={_.partial(this.props.onSelectDay, dayMoment)}
+        onSelectEvent={this.props.onSelectEvent}
+        />);
+    }
 
-  padDays(monthMoment.clone().date(1).day());
+    padDays(6 - monthMoment.clone().date(daysInMonth).day());
 
-  for (var i = 0; i < daysInMonth; i++) {
-    var dayMoment = moment(monthMoment).date(i + 1);
-    days.push(<GridDay
-      curMoment={dayMoment}
-      events={eventData.eventsForDay(dayMoment)}
-      onClick={_.partial(this.props.onSelectDay, dayMoment)}
-      onSelectEvent={this.props.onSelectEvent}
-      />);
+    return dayBlocks;
   }
 
-  padDays(6 - monthMoment.clone().date(daysInMonth).day());
-
-  return days;
-}
+});
 
 module.exports = GridMonth;
