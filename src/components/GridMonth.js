@@ -15,19 +15,13 @@ var GridMonth = React.createClass({
     )
   },
 
-  eventsForDay: function (dayMoment) {
-    var e = this.props.eventData;
-    var m = dayMoment;
-    return (e[m.year()] && e[m.year()][m.month()] && e[m.year()][m.month()][m.date()])
-      ? e[m.year()][m.month()][m.date()]
-      : [];
-  }
 });
 
 function _dayBlocksForMonth(monthMoment) {
 
   var days = [];
   var daysInMonth = monthMoment.daysInMonth();
+  var eventData   = this.props.eventData;
 
   var padDays = function (daysToPad) {
     while (daysToPad--) days.push(<DummyDay />);
@@ -39,7 +33,7 @@ function _dayBlocksForMonth(monthMoment) {
     var dayMoment = moment(monthMoment).date(i + 1);
     days.push(<GridDay
       curMoment={dayMoment}
-      events={this.eventsForDay(dayMoment)}
+      events={eventData.eventsForDay(dayMoment)}
       onClick={_.partial(this.props.onSelectDay, dayMoment)}
       onSelectEvent={this.props.onSelectEvent}
       />);

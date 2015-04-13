@@ -27,6 +27,7 @@ var DetailsPane = React.createClass({
 
   getPaneContents: function () {
     var curMoment = this.props.curMoment;
+    var eventData = this.props.eventData;
     var backArrow = (
       <small style={{marginRight: 15}}>
         <ArrowButton onClick={this.props.backToMonth} direction="left" style={{float: 'left'}} />
@@ -36,7 +37,7 @@ var DetailsPane = React.createClass({
     switch (this.props.selectedType) {
 
       case 'month':
-        var monthEvents = this.eventsForMonth(curMoment);
+        var monthEvents = eventData.eventsForMonth(curMoment);
         return (
           <div>
             <h3>{curMoment.format('MMMM')}</h3>
@@ -55,7 +56,7 @@ var DetailsPane = React.createClass({
         );
 
       case 'day':
-        var dayEvents = this.eventsForDay(curMoment);
+        var dayEvents = eventData.eventsForDay(curMoment);
         return (
           <div>
             <h3>
@@ -90,23 +91,8 @@ var DetailsPane = React.createClass({
           </div>
         );
     }
-  },
-
-  eventsForMonth: function (monthMoment) {
-    var e = this.props.eventData;
-    var m = monthMoment;
-    return (e[m.year()] && e[m.year()][m.month()])
-      ? e[m.year()][m.month()]
-      : [];
-  },
-
-  eventsForDay: function (dayMoment) {
-    var e = this.props.eventData;
-    var m = dayMoment;
-    return (e[m.year()] && e[m.year()][m.month()] && e[m.year()][m.month()][m.date()])
-      ? e[m.year()][m.month()][m.date()]
-      : [];
   }
+
 });
 
 module.exports = DetailsPane;
