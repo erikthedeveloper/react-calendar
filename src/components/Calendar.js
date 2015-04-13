@@ -4,7 +4,7 @@ var moment = require('moment');
 var GridMonth = require('./GridMonth');
 var DetailsPane = require('./DetailsPane');
 
-var ArrowButton = require('./components/ArrowButton');
+var ArrowButton = require('./ArrowButton');
 
 var Calendar = React.createClass({
 

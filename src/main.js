@@ -1,6 +1,6 @@
 var React = require('react');
 var moment = require('moment');
-var Calendar = require('./Calendar');
+var Calendar = require('./components/Calendar');
 
 var DATA_SOURCE = {
   2015: {

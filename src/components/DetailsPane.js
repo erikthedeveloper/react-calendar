@@ -1,7 +1,7 @@
 var React = require('react');
 var moment = require('moment');
 
-var ArrowButton = require('./components/ArrowButton');
+var ArrowButton = require('./ArrowButton');
 
 
 var DetailsPane = React.createClass({
