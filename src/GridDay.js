@@ -5,7 +5,7 @@ var moment = require('moment');
 var styles = {
   gridBlock: {
     height: 150,
-    width: 150,
+    width: 100/7 + "%",
     float: 'left',
     border: '1px solid gray',
     position: 'relative'
@@ -15,6 +15,13 @@ var styles = {
     top: 0,
     left: 0,
     padding: 10
+  },
+  label: {
+    display:      'inline-block',
+    maxWidth:     "100%",
+    whiteSpace:   "nowrap",
+    overflow:     "hidden",
+    textOverflow: "ellipsis"
   }
 };
 
@@ -28,14 +35,28 @@ var GridDay = React.createClass({
       _styles.clear = 'left';
 
     return (
-      <div style={_styles}>
+      <div style={_styles} onClick={this.props.onClick}>
         <span style={styles.date}>{_moment.format('Do')}</span>
         <ul className="list-unstyled" style={{marginTop: 30, marginLeft: 10}}>
         {this.props.events.map((event) =>
-          <li className="label label-info" style={{display: 'inline-block'}}>{event.title}</li>)}
+          <li
+            onClick={this.onClickEvent.bind(null, event)}
+            className="label label-info"
+            style={styles.label}>
+            {event.title}
+          </li>)}
         </ul>
       </div>
     )
+  },
+
+  propTypes: {
+    onClick: React.PropTypes.func
+  },
+
+  onClickEvent(eventData, e) {
+    e.stopPropagation();
+    this.props.onSelectEvent(eventData);
   }
 
 });

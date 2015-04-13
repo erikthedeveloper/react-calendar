@@ -1,4 +1,5 @@
 var React = require('react');
+var _     = require('lodash');
 var moment = require('moment');
 
 var GridDay  = require('./GridDay');
@@ -7,13 +8,9 @@ var DummyDay = require('./GridDay').GridDayDummy;
 var GridMonth = React.createClass({
 
   render: function () {
-    var _moment = this.props.curMoment;
-    var dayBlocks = _dayBlocksForMonth.call(this, _moment);
-
     return (
       <div>
-        <h3>{_moment.format('MMMM')} - {_moment.format('YYYY')}</h3>
-        {dayBlocks}
+        {_dayBlocksForMonth.call(this, this.props.curMoment)}
       </div>
     )
   },
@@ -40,7 +37,12 @@ function _dayBlocksForMonth(monthMoment) {
 
   for (var i = 0; i < daysInMonth; i++) {
     var dayMoment = moment(monthMoment).date(i + 1);
-    days.push(<GridDay curMoment={dayMoment} events={this.eventsForDay(dayMoment)} />);
+    days.push(<GridDay
+      curMoment={dayMoment}
+      events={this.eventsForDay(dayMoment)}
+      onClick={_.partial(this.props.onSelectDay, dayMoment)}
+      onSelectEvent={this.props.onSelectEvent}
+      />);
   }
 
   padDays(6 - monthMoment.clone().date(daysInMonth).day());
