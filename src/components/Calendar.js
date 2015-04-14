@@ -7,32 +7,20 @@ var GridMonth   = require('./GridMonth');
 var DetailsPane = require('./DetailsPane');
 var ArrowButton = require('./ArrowButton');
 
-var DATA_SOURCE = {
-  2015: {
-    3: {
-      3: [
-        {title: 'April 3rd'},
-        {title: 'And another... April 3rd'}
-      ],
-      10: [ {title: 'My Birthday!'}]
-    },
-    4: {
-      5: [{title: 'Sinco De Mayo!'}],
-      14: [
-        {title: 'Just another day...'},
-        {title: 'The 14th!'}
-      ]
-    }
-  }
-};
-
-// TODO: Yuck, I know :)
-for (var year in DATA_SOURCE)
-  for (var monthIndex in DATA_SOURCE[year])
-    for (var date in DATA_SOURCE[year][monthIndex])
-      for (var eventIndex in DATA_SOURCE[year][monthIndex][date])
-        DATA_SOURCE[year][monthIndex][date][eventIndex]['moment'] = moment([year, monthIndex, date]);
-var _eventData = new EventData(DATA_SOURCE);
+var _eventData  = new EventData({});
+// TEMP - DummyData
+var DATA_SOURCE = [
+  {dateArgs: [2015, 3, 3], title: 'April 3rd'},
+  {dateArgs: [2015, 3, 3], title: 'And another... April 3rd'},
+  {dateArgs: [2015, 3, 10], title: 'My Birthday!'},
+  {dateArgs: [2015, 4, 5 ], title: 'Sinco De Mayo!'},
+  {dateArgs: [2015, 4, 14], title: 'Just another day...'},
+  {dateArgs: [2015, 4, 14], title: 'The 14th!'}
+];
+DATA_SOURCE.forEach(function (dummyEvent) {
+  _eventData.addEvent({title: dummyEvent.title}, moment(dummyEvent.dateArgs));
+});
+// TEMP END - DummyData
 
 var Calendar = React.createClass({
 
