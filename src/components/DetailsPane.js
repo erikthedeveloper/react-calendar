@@ -1,6 +1,7 @@
 var React = require('react');
 var moment = require('moment');
 
+var EventStore   = require('../stores/EventStore');
 var EventActions = require('../actions/EventActions');
 var ArrowButton = require('./ArrowButton');
 
@@ -28,7 +29,6 @@ var DetailsPane = React.createClass({
 
   getPaneContents: function () {
     var curMoment = this.props.curMoment;
-    var eventData = this.props.eventData;
     var backArrow = (
       <small style={{marginRight: 15}}>
         <ArrowButton onClick={this.props.backToMonth} direction="left" style={{float: 'left'}} />
@@ -38,26 +38,38 @@ var DetailsPane = React.createClass({
     switch (this.props.selectedType) {
 
       case 'month':
-        var monthEvents = eventData.eventsForMonth(curMoment);
+        var monthEvents = EventStore.getForMonth(curMoment);
+        var groupedByDay = {};
+        monthEvents.forEach((event) => {
+          if (!groupedByDay[event.moment.date()]) groupedByDay[event.moment.date()] = [];
+          groupedByDay[event.moment.date()].push(event);
+        });
         return (
           <div>
             <h3>{curMoment.format('MMMM')}</h3>
-            {Object.keys(monthEvents)
-              .map((dayNum) => moment(curMoment).date(dayNum))
-              .map((day) =>
-                    <div>
-                      <h5>{day.format('ddd Do')}</h5>
-                      <ul>
-                        {monthEvents[day.date()].map((event) =>
-                          <li onClick={this.removeEvent.bind(null, event)} style={{cursor: 'pointer'}}>{event.title}</li>)}
-                      </ul>
-                    </div>)
+            {Object.keys(groupedByDay)
+              .map((dayNum) => {
+                var dayDate = moment(curMoment).date(dayNum);
+                return (
+                  <div>
+                    <h5>{dayDate.format('ddd Do')}</h5>
+                    <ul>
+                      {groupedByDay[dayDate.date()].map((event) =>
+                        <li
+                          onClick={this.removeEvent.bind(null, event)}
+                          style={{cursor: 'pointer'}}>
+                          {event.title}
+                        </li>)}
+                    </ul>
+                  </div>
+                )
+              })
             }
           </div>
         );
 
       case 'day':
-        var dayEvents = eventData.eventsForDay(curMoment);
+        var dayEvents = EventStore.getForDay(curMoment);
         return (
           <div>
             <h3>
@@ -98,18 +110,18 @@ var DetailsPane = React.createClass({
 
   addEvent() {
     var newEventData = {
-      title: React.findDOMNode(this.refs['newEventTitle']).value
+      title: React.findDOMNode(this.refs['newEventTitle']).value,
+      moment: this.props.curMoment
     };
 
     EventActions.create(newEventData);
-    this.props.eventData.addEvent(newEventData, this.props.curMoment);
     React.findDOMNode(this.refs['newEventTitle']).value = "";
     React.findDOMNode(this.refs['newEventTitle']).focus();
 
   },
 
   removeEvent(targetEvent) {
-    this.props.eventData.removeEvent(targetEvent);
+    EventActions.destroy(targetEvent.id);
   }
 
 });

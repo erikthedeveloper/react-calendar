@@ -9,10 +9,10 @@ var EventActions = {
     });
   },
 
-  destroy: function (targetEvent) {
+  destroy: function (eventId) {
     AppDispatcher.dispatch({
       actionType: AppActions.EVENT_DESTROY,
-      targetEvent: targetEvent
+      eventId: eventId
     });
   }
 };

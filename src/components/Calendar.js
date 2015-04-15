@@ -2,26 +2,10 @@ var React = require('react');
 var moment = require('moment');
 
 var EventStore = require('../stores/EventStore');
-var EventData = require('../EventData');
 
 var GridMonth   = require('./GridMonth');
 var DetailsPane = require('./DetailsPane');
 var ArrowButton = require('./ArrowButton');
-
-var _eventData  = new EventData({});
-// TEMP - DummyData
-var DATA_SOURCE = [
-  {dateArgs: [2015, 3, 3], title: 'April 3rd'},
-  {dateArgs: [2015, 3, 3], title: 'And another... April 3rd'},
-  {dateArgs: [2015, 3, 10], title: 'My Birthday!'},
-  {dateArgs: [2015, 4, 5 ], title: 'Sinco De Mayo!'},
-  {dateArgs: [2015, 4, 14], title: 'Just another day...'},
-  {dateArgs: [2015, 4, 14], title: 'The 14th!'}
-];
-DATA_SOURCE.forEach(function (dummyEvent) {
-  _eventData.addEvent({title: dummyEvent.title}, moment(dummyEvent.dateArgs));
-});
-// TEMP END - DummyData
 
 var Calendar = React.createClass({
 
@@ -29,15 +13,12 @@ var Calendar = React.createClass({
     return {
       curMoment: moment(),
       selectedType: 'month',
-      eventData: _eventData
+      events: EventStore.getAll()
     }
   },
 
   componentDidMount() {
-    EventStore.addChangeListener(() => alert('Change from EventStore caught from Calendar#componentDidMount!!'));
-    _eventData.addSubscription(() => {
-      this.setState({eventData: _eventData})
-    });
+    EventStore.addChangeListener(() => this.setState({events: EventStore.getAll()}));
   },
 
   render: function () {
@@ -58,7 +39,7 @@ var Calendar = React.createClass({
             curMoment={monthMoment}
             onSelectDay={this.onSelectDay}
             onSelectEvent={this.onSelectEvent}
-            eventData={this.state.eventData}
+            events={this.state.events}
             />
         </div>
         <div className="col-sm-3">
@@ -66,7 +47,7 @@ var Calendar = React.createClass({
             curMoment={monthMoment}
             selectedType={this.state.selectedType}
             selectedEvent={this.state.selectedEvent}
-            eventData={this.state.eventData}
+            events={this.state.events}
             backToMonth={() => this.setState({selectedType: 'month'})}
             />
         </div>

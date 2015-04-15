@@ -2,6 +2,8 @@ var React = require('react');
 var _     = require('lodash');
 var moment = require('moment');
 
+var EventStore = require('../stores/EventStore');
+
 var GridDay  = require('./GridDay');
 var DummyDay = require('./GridDay').GridDayDummy;
 
@@ -29,7 +31,6 @@ var GridMonth = React.createClass({
   renderDayBlocks(monthMoment) {
     var dayBlocks = [];
     var daysInMonth = monthMoment.daysInMonth();
-    var eventData   = this.props.eventData;
 
     var padDays = function (daysToPad) {
       while (daysToPad--) dayBlocks.push(<DummyDay />);
@@ -41,7 +42,7 @@ var GridMonth = React.createClass({
       var dayMoment = moment(monthMoment).date(i);
       dayBlocks.push(<GridDay
         curMoment={dayMoment}
-        events={eventData.eventsForDay(dayMoment)}
+        events={EventStore.getForDay(dayMoment)}
         onClick={_.partial(this.props.onSelectDay, dayMoment)}
         onSelectEvent={this.props.onSelectEvent}
         />);
