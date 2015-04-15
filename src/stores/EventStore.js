@@ -1,55 +1,15 @@
 var _             = require('lodash');
 var moment        = require('moment');
-var EventEmitter  = require('events').EventEmitter;
 var AppDispatcher = require('../AppDispatcher');
 var AppActions    = require('../actions/actions');
+var ChangeEmitter = require('./ChangeEmitter');
 
 var _events = {};
 
-// TEMP - Dummy makeId function
-var _curId = 0;
-var makeId = function () {
-  return ++_curId;
-};
-
-// TEMP - Dummy Data
-var DATA_SOURCE = [
-  {dateArgs: [2015, 3, 3], title: 'HEYYYYY April 3rd'},
-  {dateArgs: [2015, 3, 3], title: 'And another... April 3rd'},
-  {dateArgs: [2015, 3, 10], title: 'My Birthday!'},
-  {dateArgs: [2015, 4, 5 ], title: 'Sinco De Mayo!'},
-  {dateArgs: [2015, 4, 14], title: 'Just another day...'},
-  {dateArgs: [2015, 4, 14], title: 'The 14th!'}
-];
-DATA_SOURCE.forEach(function (dummyEvent) {
-  var eventId = makeId();
-  _events[eventId] = {
-    id: eventId,
-    title: dummyEvent.title,
-    moment: moment(dummyEvent.dateArgs)
-  };
-});
-// TEMP END - Dummy Data
-
-
 /**
- * @extends EventEmitter.prototype
+ * @extends ChangeEmitter
  */
-var CHANGE_EVENT = 'CHANGE_EVENT';
-var changeEmitterPrototype = _.assign({}, EventEmitter.prototype, {
-  emitChange: function () {
-    this.emit(CHANGE_EVENT);
-  },
-
-  addChangeListener: function (callback) {
-    this.on(CHANGE_EVENT, callback);
-  }
-});
-
-/**
- * @extends changeEmitterPrototype
- */
-var EventStore = _.assign({}, changeEmitterPrototype, {
+var EventStore = _.assign({}, ChangeEmitter, {
 
   get: function (id) {
    return _events[id];
@@ -64,9 +24,7 @@ var EventStore = _.assign({}, changeEmitterPrototype, {
    * @return {[]}
    */
   getForDay: function (dayMoment) {
-    return _.filter(_events, (event) => {
-      return moment(dayMoment).isSame(event.moment, 'day');
-    })
+    return _.filter(_events, (event) => moment(dayMoment).isSame(event.moment, 'day'))
   },
 
   /**
@@ -79,11 +37,17 @@ var EventStore = _.assign({}, changeEmitterPrototype, {
 
 });
 
+// TEMP - Dummy _makeId function
+var _curId = 0;
+var _makeId = function () {
+  return ++_curId;
+};
+
 /**
  * @param eventData {*}
  */
 var _createEvent = function (eventData) {
-  var eventId = makeId();
+  var eventId = _makeId();
 
   if (!moment.isMoment(eventData.moment))
     throw new Exception("WTF give a moment date object man...");
@@ -120,3 +84,22 @@ EventStore.dispatchToken = AppDispatcher.register(function (action) {
 });
 
 module.exports = EventStore;
+
+// TEMP - Dummy Data
+var DATA_SOURCE = [
+  {dateArgs: [2015, 3, 3], title: 'HEYYYYY April 3rd'},
+  {dateArgs: [2015, 3, 3], title: 'And another... April 3rd'},
+  {dateArgs: [2015, 3, 10], title: 'My Birthday!'},
+  {dateArgs: [2015, 4, 5 ], title: 'Sinco De Mayo!'},
+  {dateArgs: [2015, 4, 14], title: 'Just another day...'},
+  {dateArgs: [2015, 4, 14], title: 'The 14th!'}
+];
+DATA_SOURCE.forEach(function (dummyEvent) {
+  var eventId = _makeId();
+  _events[eventId] = {
+    id: eventId,
+    title: dummyEvent.title,
+    moment: moment(dummyEvent.dateArgs)
+  };
+});
+// TEMP END - Dummy Data
