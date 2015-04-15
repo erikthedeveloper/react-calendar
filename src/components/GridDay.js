@@ -32,14 +32,14 @@ var GridDay = React.createClass({
 
   render: function() {
 
-    var _moment = this.props.curMoment;
+    var dayMoment = this.props.curMoment;
     var _styles = _.assign({}, styles.gridBlock);
-    if (_moment.day() === 0)
+    if (dayMoment.day() === 0)
       _styles.clear = 'left';
 
     return (
       <div style={_styles} onClick={this.props.onClick}>
-        <span style={styles.date}>{_moment.format('Do')}</span>
+        <span style={styles.date}>{dayMoment.format('Do')}</span>
         <ul className="list-unstyled" style={{marginTop: 30, marginLeft: 10}}>
         {this.props.events.map((event) =>
           <li

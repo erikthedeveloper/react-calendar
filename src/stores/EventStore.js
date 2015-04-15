@@ -75,44 +75,42 @@ var EventStore = _.assign({}, changeEmitterPrototype, {
    */
   getForMonth: function (monthMoment) {
     return _.filter(_events, (event) => moment(monthMoment).isSame(event.moment, 'month'))
-  },
-
-  /**
-   * TODO: Extract to private function
-   * @param eventData
-   */
-  create: function (eventData) {
-    var eventId = makeId();
-
-    if (!moment.isMoment(eventData.moment))
-      throw new Exception("WTF give a moment date object man...");
-
-    _events[eventId] = _.assign(eventData, {
-      id: eventId
-    });
-    return eventId;
-  },
-
-  /**
-   * TODO: Extract to private function
-   * @param eventId
-   */
-  destroy: function (eventId) {
-    delete _events[eventId];
   }
 
 });
+
+/**
+ * @param eventData {*}
+ */
+var _createEvent = function (eventData) {
+  var eventId = makeId();
+
+  if (!moment.isMoment(eventData.moment))
+    throw new Exception("WTF give a moment date object man...");
+
+  _events[eventId] = _.assign(eventData, {
+    id: eventId
+  });
+  return eventId;
+};
+
+/**
+ * @param eventId {number}
+ */
+var _destroyEvent = function (eventId) {
+  delete _events[eventId];
+};
 
 EventStore.dispatchToken = AppDispatcher.register(function (action) {
 
   switch (action.actionType) {
     case AppActions.EVENT_CREATE:
-      EventStore.create(action.eventData);
+      _createEvent(action.eventData);
       EventStore.emitChange();
       break;
 
     case AppActions.EVENT_DESTROY:
-      EventStore.destroy(action.eventId);
+      _destroyEvent(action.eventId);
       EventStore.emitChange();
       break;
   }

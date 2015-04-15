@@ -57,12 +57,10 @@ var Calendar = React.createClass({
 
   prevMonth: function () {
     this.setState({curMoment: this.state.curMoment.subtract(1, 'month')});
-    return false;
   },
 
   nextMonth: function () {
     this.setState({curMoment: this.state.curMoment.add(1, 'month')});
-    return false;
   },
 
   onSelectDay(dayMoment) {
