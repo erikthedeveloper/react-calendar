@@ -2,7 +2,9 @@ var React = require('react');
 var moment = require('moment');
 
 var EventStore   = require('../stores/EventStore');
+var UserSelectedStore = require('../stores/UserSelectedStore');
 var EventActions = require('../actions/EventActions');
+var UserSelectedActions = require('../actions/UserSelectedActions');
 var ArrowButton = require('./ArrowButton');
 
 /**
@@ -82,16 +84,34 @@ var DetailsPane = React.createClass({
     )
   },
 
+  getInitialState() {
+    return {
+      selectedType: UserSelectedStore.selectedType()
+    }
+  },
+
+  componentDidMount() {
+    UserSelectedStore.addChangeListener(() => {
+      return this.setState({
+        selectedType:   UserSelectedStore.selectedType()
+      });
+    });
+  },
+
+  onNavBack () {
+    UserSelectedActions.paneNavUp();
+  },
+
   getPaneContents: function () {
-    var curMoment = this.props.curMoment;
+    var curMoment = UserSelectedStore.selectedDay();
     var backArrow = (
       <small style={{marginRight: 15}}>
-        <ArrowButton onClick={this.props.backToMonth} direction="left" style={{float: 'left'}} />
+        <ArrowButton onClick={this.onNavBack} direction="left" style={{float: 'left'}} />
       </small>
     );
     var fallbackListing = <p><strong>Whoops!</strong> No events found!</p>;
 
-    switch (this.props.selectedType) {
+    switch (this.state.selectedType) {
 
       case 'month':
         var groupedByDay = {};
@@ -135,7 +155,7 @@ var DetailsPane = React.createClass({
         );
 
       case 'event':
-        var event = this.props.selectedEvent;
+        var event = UserSelectedStore.selectedEvent();
         return (
           <div>
             <h3>{backArrow} {event.title}</h3>

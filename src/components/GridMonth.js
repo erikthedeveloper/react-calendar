@@ -43,8 +43,6 @@ var GridMonth = React.createClass({
       dayBlocks.push(<GridDay
         curMoment={dayMoment}
         events={EventStore.getForDay(dayMoment)}
-        onClick={_.partial(this.props.onSelectDay, dayMoment)}
-        onSelectEvent={this.props.onSelectEvent}
         />);
     }
 

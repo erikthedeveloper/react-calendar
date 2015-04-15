@@ -37,18 +37,13 @@ var Calendar = React.createClass({
 
           <GridMonth
             curMoment={monthMoment}
-            onSelectDay={this.onSelectDay}
-            onSelectEvent={this.onSelectEvent}
             events={this.state.events}
             />
         </div>
         <div className="col-sm-3">
           <DetailsPane
             curMoment={monthMoment}
-            selectedType={this.state.selectedType}
-            selectedEvent={this.state.selectedEvent}
             events={this.state.events}
-            backToMonth={() => this.setState({selectedType: 'month'})}
             />
         </div>
       </div>
@@ -61,13 +56,6 @@ var Calendar = React.createClass({
 
   nextMonth: function () {
     this.setState({curMoment: this.state.curMoment.add(1, 'month')});
-  },
-
-  onSelectDay(dayMoment) {
-    this.setState({
-      curMoment: dayMoment,
-      selectedType: 'day'
-    });
   },
 
   onSelectEvent(event) {
