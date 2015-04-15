@@ -118,7 +118,7 @@ var DetailsPane = React.createClass({
   },
 
   getPaneContents: function () {
-    var curMoment = UserSelectedStore.selectedDay();
+    var selectedMoment = UserSelectedStore.selectedDay();
     var backArrow = (
       <small style={{marginRight: 15}}>
         <ArrowButton onClick={this.onNavBack} direction="left" style={{float: 'left'}} />
@@ -130,18 +130,18 @@ var DetailsPane = React.createClass({
 
       case 'month':
         var groupedByDay = {};
-        EventStore.getForMonth(curMoment).forEach((event) => {
+        EventStore.getForMonth(selectedMoment).forEach((event) => {
           if (!groupedByDay[event.moment.date()]) groupedByDay[event.moment.date()] = [];
           groupedByDay[event.moment.date()].push(event);
         });
         return (
           <div>
-            <h3>{curMoment.format('MMMM')}</h3>
+            <h3>{selectedMoment.format('MMMM')}</h3>
             {(Object.keys(groupedByDay).length === 0)
               ? fallbackListing
               : Object.keys(groupedByDay)
                 .map((dayNum) => {
-                  var dayDate = moment(curMoment).date(dayNum);
+                  var dayDate = moment(selectedMoment).date(dayNum);
                   return (
                     <div>
                       <h5 className="lead">{dayDate.format('ddd Do')}</h5>
@@ -155,11 +155,11 @@ var DetailsPane = React.createClass({
         );
 
       case 'day':
-        var dayEvents = EventStore.getForDay(curMoment);
+        var dayEvents = EventStore.getForDay(selectedMoment);
         return (
           <div>
-            <h3>{backArrow} {curMoment.format('MMMM ddd Do')}</h3>
-            <AddDayEventForm moment={curMoment} />
+            <h3>{backArrow} {selectedMoment.format('MMMM ddd Do')}</h3>
+            <AddDayEventForm moment={selectedMoment} />
             <hr />
             {(dayEvents.length === 0)
               ? fallbackListing
@@ -175,7 +175,7 @@ var DetailsPane = React.createClass({
           <div>
             <h3>{backArrow} {event.title}</h3>
             <p>
-              <strong>{curMoment.format('MMMM ddd Do')}</strong> Some event details here...
+              <strong>{selectedMoment.format('MMMM ddd Do')}</strong> Some event details here...
             </p>
           </div>
         );

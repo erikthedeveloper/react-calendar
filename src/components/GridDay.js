@@ -37,7 +37,7 @@ var GridDay = React.createClass({
   },
 
   render: function() {
-    var dayMoment = this.props.curMoment;
+    var dayMoment = this.props.selectedMoment;
 
     return (
       <div style={this._getStyles()} onClick={this.onClickDay.bind(null, dayMoment)}>
@@ -66,7 +66,7 @@ var GridDay = React.createClass({
 
   _getStyles() {
     var _styles = _.assign({}, styles.gridBlock);
-    if (this.props.curMoment.day() === 0)
+    if (this.props.selectedMoment.day() === 0)
       _styles.clear = 'left';
     if (this.props.isActive)
       _styles.backgroundColor = 'lightgray';

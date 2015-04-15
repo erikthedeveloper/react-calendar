@@ -44,10 +44,11 @@ var GridMonth = React.createClass({
 
     for (var i = 1; i <= daysInMonth; i++) {
       var dayMoment = moment(monthMoment).date(i);
+      var isMonthMode = UserSelectedStore.selectedType() !== 'month';
       dayBlocks.push(<GridDay
-        curMoment={dayMoment}
+        selectedMoment={dayMoment}
         events={EventStore.getForDay(dayMoment)}
-        isActive={UserSelectedStore.selectedType() !== 'month' && dayMoment.isSame(this.props.selectedMoment, 'day')}
+        isActive={isMonthMode && dayMoment.isSame(this.props.selectedMoment, 'day')}
         />);
     }
 
