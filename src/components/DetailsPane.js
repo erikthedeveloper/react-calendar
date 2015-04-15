@@ -1,6 +1,7 @@
 var React = require('react');
 var moment = require('moment');
 
+var EventActions = require('../actions/EventActions');
 var ArrowButton = require('./ArrowButton');
 
 
@@ -100,6 +101,7 @@ var DetailsPane = React.createClass({
       title: React.findDOMNode(this.refs['newEventTitle']).value
     };
 
+    EventActions.create(newEventData);
     this.props.eventData.addEvent(newEventData, this.props.curMoment);
     React.findDOMNode(this.refs['newEventTitle']).value = "";
     React.findDOMNode(this.refs['newEventTitle']).focus();

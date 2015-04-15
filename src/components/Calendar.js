@@ -1,6 +1,7 @@
 var React = require('react');
 var moment = require('moment');
 
+var EventStore = require('../stores/EventStore');
 var EventData = require('../EventData');
 
 var GridMonth   = require('./GridMonth');
@@ -33,6 +34,7 @@ var Calendar = React.createClass({
   },
 
   componentDidMount() {
+    EventStore.addChangeListener(() => alert('Change from EventStore caught from Calendar#componentDidMount!!'));
     _eventData.addSubscription(() => {
       this.setState({eventData: _eventData})
     });
