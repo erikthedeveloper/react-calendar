@@ -101,14 +101,14 @@ var DetailsPane = React.createClass({
 
   getInitialState() {
     return {
-      selectedType: UserSelectedStore.selectedType()
+      selectedType: UserSelectedStore.getPaneType()
     }
   },
 
   componentDidMount() {
     UserSelectedStore.addChangeListener(() => {
       return this.setState({
-        selectedType:   UserSelectedStore.selectedType()
+        selectedType:   UserSelectedStore.getPaneType()
       });
     });
   },
@@ -118,7 +118,7 @@ var DetailsPane = React.createClass({
   },
 
   getPaneContents: function () {
-    var selectedMoment = UserSelectedStore.selectedDay();
+    var selectedMoment = UserSelectedStore.getMoment();
     var backArrow = (
       <small style={{marginRight: 15}}>
         <ArrowButton onClick={this.onNavBack} direction="left" style={{float: 'left'}} />
@@ -170,7 +170,7 @@ var DetailsPane = React.createClass({
         );
 
       case 'event':
-        var event = UserSelectedStore.selectedEvent();
+        var event = UserSelectedStore.getEvent();
         return (
           <div>
             <h3>{backArrow} {event.title}</h3>

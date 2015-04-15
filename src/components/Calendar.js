@@ -14,8 +14,8 @@ var Calendar = React.createClass({
 
   getInitialState: function () {
     return {
-      selectedMoment: UserSelectedStore.selectedDay(),
-      selectedType: UserSelectedStore.selectedType(),
+      selectedMoment: UserSelectedStore.getMoment(),
+      selectedType: UserSelectedStore.getPaneType(),
       events: EventStore.getAll()
     }
   },
@@ -23,7 +23,7 @@ var Calendar = React.createClass({
   componentDidMount() {
     EventStore.addChangeListener(() => this.setState({events: EventStore.getAll()}));
     UserSelectedStore.addChangeListener(() => this.setState({
-      selectedMoment: UserSelectedStore.selectedDay()
+      selectedMoment: UserSelectedStore.getMoment()
     }));
   },
 

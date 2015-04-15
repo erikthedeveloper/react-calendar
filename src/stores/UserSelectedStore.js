@@ -5,9 +5,9 @@ var ActionNames   = require('../actions/UserSelectedActions').actionNames;
 var ChangeEmitter = require('./ChangeEmitter');
 var EventStore    = require('./EventStore');
 
-var _selectedDay = moment();
-var _selectedType = 'month';
-var _selectedEventId;
+var _moment = moment();
+var _paneType = 'month';
+var _eventId;
 
 /**
  * @extends ChangeEmitter
@@ -17,22 +17,22 @@ var UserSelectedStore = _.assign({}, ChangeEmitter, {
   /**
    * @return {moment}
    */
-  selectedDay() {
-    return _selectedDay;
+  getMoment() {
+    return _moment;
   },
 
   /**
    * @return {string}
    */
-  selectedType() {
-    return _selectedType;
+  getPaneType() {
+    return _paneType;
   },
 
   /**
    * @return {*}
    */
-  selectedEvent() {
-    return EventStore.get(_selectedEventId);
+  getEvent() {
+    return EventStore.get(_eventId);
   }
 
 });
@@ -41,35 +41,35 @@ UserSelectedStore.dispatchToken = AppDispatcher.register(function (action) {
 
   switch (action.actionType) {
     case ActionNames.SELECT_DAY:
-      _selectedDay  = moment(action.dateArgs);
-      _selectedType = 'day';
+      _moment  = moment(action.dateArgs);
+      _paneType = 'day';
       UserSelectedStore.emitChange();
       break;
 
     case ActionNames.SELECT_EVENT:
-      _selectedEventId = action.eventId;
-      _selectedType    = 'event';
-      if (!_selectedDay)
-        _selectedDay = EventStore.get(_selectedEventId).moment;
+      _eventId = action.eventId;
+      _paneType    = 'event';
+      if (!_moment)
+        _moment = EventStore.get(_eventId).moment;
       UserSelectedStore.emitChange();
       break;
 
     case ActionNames.PANE_NAV_UP:
-      _selectedType = _selectedType === 'event'
+      _paneType = _paneType === 'event'
         ? 'day'
         : 'month';
       UserSelectedStore.emitChange();
       break;
 
     case ActionNames.MONTH_NAV_PREV:
-      _selectedDay.subtract(1, 'month');
-      _selectedType = 'month';
+      _moment.subtract(1, 'month');
+      _paneType = 'month';
       UserSelectedStore.emitChange();
       break;
 
     case ActionNames.MONTH_NAV_NEXT:
-      _selectedDay.add(1, 'month');
-      _selectedType = 'month';
+      _moment.add(1, 'month');
+      _paneType = 'month';
       UserSelectedStore.emitChange();
       break;
   }
