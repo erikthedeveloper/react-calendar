@@ -12,21 +12,6 @@ var ArrowButton = require('./ArrowButton');
 
 var Calendar = React.createClass({
 
-  getInitialState: function () {
-    return {
-      selectedMoment: UserSelectedStore.getMoment(),
-      selectedType: UserSelectedStore.getPaneType(),
-      events: EventStore.getAll()
-    }
-  },
-
-  componentDidMount() {
-    EventStore.addChangeListener(() => this.setState({events: EventStore.getAll()}));
-    UserSelectedStore.addChangeListener(() => this.setState({
-      selectedMoment: UserSelectedStore.getMoment()
-    }));
-  },
-
   render: function () {
 
     var monthMoment = this.state.selectedMoment;
@@ -54,6 +39,21 @@ var Calendar = React.createClass({
         </div>
       </div>
     )
+  },
+
+  getInitialState: function () {
+    return {
+      selectedMoment: UserSelectedStore.getMoment(),
+      selectedType: UserSelectedStore.getPaneType(),
+      events: EventStore.getAll()
+    }
+  },
+
+  componentDidMount() {
+    EventStore.addChangeListener(() => this.setState({events: EventStore.getAll()}));
+    UserSelectedStore.addChangeListener(() => this.setState({
+      selectedMoment: UserSelectedStore.getMoment()
+    }));
   },
 
   prevMonth: function () {
