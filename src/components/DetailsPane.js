@@ -23,12 +23,27 @@ var EventListItem = React.createClass({
         <span
           className="glyphicon glyphicon-remove"
           style={{cursor: 'pointer'}}
-          onClick={EventActions.destroy.bind(null, event.id)}
+          onClick={this.onClickRemoveEvent}
           ></span>
-        {event.title}
+        -
+        <span
+          style={{cursor: 'pointer'}}
+          onClick={this.onClickViewEvent}
+          >
+          {event.title}
+        </span>
       </li>
     );
+  },
+
+  onClickViewEvent() {
+    UserSelectedActions.selectEvent(this.props.event.id);
+  },
+
+  onClickRemoveEvent() {
+    EventActions.destroy(this.props.event.id)
   }
+
 });
 
 /**

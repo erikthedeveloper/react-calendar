@@ -32,15 +32,15 @@ var styles = {
 
 var GridDay = React.createClass({
 
-  render: function() {
+  propTypes: {
+    isActive: React.PropTypes.bool
+  },
 
+  render: function() {
     var dayMoment = this.props.curMoment;
-    var _styles = _.assign({}, styles.gridBlock);
-    if (dayMoment.day() === 0)
-      _styles.clear = 'left';
 
     return (
-      <div style={_styles} onClick={this.onClickDay.bind(null, dayMoment)}>
+      <div style={this._getStyles()} onClick={this.onClickDay.bind(null, dayMoment)}>
         <span style={styles.date}>{dayMoment.format('Do')}</span>
         <ul className="list-unstyled" style={{marginTop: 30, marginLeft: 10}}>
         {this.props.events.map((event) =>
@@ -62,6 +62,15 @@ var GridDay = React.createClass({
   onClickEvent(eventData, e) {
     e.stopPropagation();
     UserSelectedActions.selectEvent(eventData.id);
+  },
+
+  _getStyles() {
+    var _styles = _.assign({}, styles.gridBlock);
+    if (this.props.curMoment.day() === 0)
+      _styles.clear = 'left';
+    if (this.props.isActive)
+      _styles.backgroundColor = 'lightgray';
+    return _styles;
   }
 
 });

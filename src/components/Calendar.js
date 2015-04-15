@@ -2,6 +2,9 @@ var React = require('react');
 var moment = require('moment');
 
 var EventStore = require('../stores/EventStore');
+var UserSelectedStore = require('../stores/UserSelectedStore');
+
+var UserSelectedActions = require('../actions/UserSelectedActions');
 
 var GridMonth   = require('./GridMonth');
 var DetailsPane = require('./DetailsPane');
@@ -11,19 +14,22 @@ var Calendar = React.createClass({
 
   getInitialState: function () {
     return {
-      curMoment: moment(),
-      selectedType: 'month',
+      selectedMoment: UserSelectedStore.selectedDay(),
+      selectedType: UserSelectedStore.selectedType(),
       events: EventStore.getAll()
     }
   },
 
   componentDidMount() {
     EventStore.addChangeListener(() => this.setState({events: EventStore.getAll()}));
+    UserSelectedStore.addChangeListener(() => this.setState({
+      selectedMoment: UserSelectedStore.selectedDay()
+    }));
   },
 
   render: function () {
 
-    var monthMoment = this.state.curMoment;
+    var monthMoment = this.state.selectedMoment;
 
     return (
       <div className="row">
@@ -36,13 +42,13 @@ var Calendar = React.createClass({
           </h3>
 
           <GridMonth
-            curMoment={monthMoment}
+            selectedMoment={monthMoment}
             events={this.state.events}
             />
         </div>
         <div className="col-sm-3">
           <DetailsPane
-            curMoment={monthMoment}
+            selectedMoment={monthMoment}
             events={this.state.events}
             />
         </div>
@@ -51,19 +57,11 @@ var Calendar = React.createClass({
   },
 
   prevMonth: function () {
-    this.setState({curMoment: this.state.curMoment.subtract(1, 'month')});
+    UserSelectedActions.monthNavPrev();
   },
 
   nextMonth: function () {
-    this.setState({curMoment: this.state.curMoment.add(1, 'month')});
-  },
-
-  onSelectEvent(event) {
-    this.setState({
-      curMoment: event.moment,
-      selectedType: 'event',
-      selectedEvent: event
-    });
+    UserSelectedActions.monthNavNext();
   }
 
 });

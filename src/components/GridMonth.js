@@ -3,6 +3,7 @@ var _     = require('lodash');
 var moment = require('moment');
 
 var EventStore = require('../stores/EventStore');
+var UserSelectedStore = require('../stores/UserSelectedStore');
 
 var GridDay  = require('./GridDay');
 var DummyDay = require('./GridDay').GridDayDummy;
@@ -17,8 +18,12 @@ var styles = {
 
 var GridMonth = React.createClass({
 
+  propTypes: {
+    selectedMoment: React.PropTypes.object.isRequired
+  },
+
   render: function () {
-    var monthMoment = this.props.curMoment;
+    var monthMoment = this.props.selectedMoment;
     return (
       <div>
         {moment.weekdaysShort().map((day) =>
@@ -31,7 +36,6 @@ var GridMonth = React.createClass({
   renderDayBlocks(monthMoment) {
     var dayBlocks = [];
     var daysInMonth = monthMoment.daysInMonth();
-
     var padDays = function (daysToPad) {
       while (daysToPad--) dayBlocks.push(<DummyDay />);
     };
@@ -43,6 +47,7 @@ var GridMonth = React.createClass({
       dayBlocks.push(<GridDay
         curMoment={dayMoment}
         events={EventStore.getForDay(dayMoment)}
+        isActive={UserSelectedStore.selectedType() !== 'month' && dayMoment.isSame(this.props.selectedMoment, 'day')}
         />);
     }
 

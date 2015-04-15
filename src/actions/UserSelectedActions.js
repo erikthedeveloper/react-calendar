@@ -3,7 +3,9 @@ var AppDispatcher = require('../AppDispatcher');
 var _actions = {
   SELECT_DAY:   'SELECT_DAY',
   SELECT_EVENT: 'SELECT_EVENT',
-  PANE_NAV_UP:  'PANE_NAV_UP'
+  PANE_NAV_UP:  'PANE_NAV_UP',
+  MONTH_NAV_PREV: 'MONTH_NAV_PREV',
+  MONTH_NAV_NEXT: 'MONTH_NAV_NEXT'
 };
 
 var UserSelectedActions = {
@@ -25,6 +27,18 @@ var UserSelectedActions = {
   paneNavUp: function () {
     AppDispatcher.dispatch({
       actionType: _actions.PANE_NAV_UP
+    });
+  },
+
+  monthNavPrev: function () {
+    AppDispatcher.dispatch({
+      actionType: _actions.MONTH_NAV_PREV
+    });
+  },
+
+  monthNavNext: function () {
+    AppDispatcher.dispatch({
+      actionType: _actions.MONTH_NAV_NEXT
     });
   }
 

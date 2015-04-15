@@ -5,8 +5,8 @@ var ActionNames   = require('../actions/UserSelectedActions').actionNames;
 var ChangeEmitter = require('./ChangeEmitter');
 var EventStore    = require('./EventStore');
 
-var _selectedDay;
-var _selectedType;
+var _selectedDay = moment();
+var _selectedType = 'month';
 var _selectedEventId;
 
 /**
@@ -58,6 +58,18 @@ UserSelectedStore.dispatchToken = AppDispatcher.register(function (action) {
       _selectedType = _selectedType === 'event'
         ? 'day'
         : 'month';
+      UserSelectedStore.emitChange();
+      break;
+
+    case ActionNames.MONTH_NAV_PREV:
+      _selectedDay.subtract(1, 'month');
+      _selectedType = 'month';
+      UserSelectedStore.emitChange();
+      break;
+
+    case ActionNames.MONTH_NAV_NEXT:
+      _selectedDay.add(1, 'month');
+      _selectedType = 'month';
       UserSelectedStore.emitChange();
       break;
   }
