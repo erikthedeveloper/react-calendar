@@ -1,7 +1,7 @@
 var _             = require('lodash');
 var moment        = require('moment');
 var AppDispatcher = require('../AppDispatcher');
-var AppActions    = require('../actions/actions');
+var ActionNames   = require('../actions/EventActions').actionNames;
 var ChangeEmitter = require('./ChangeEmitter');
 
 var _events = {};
@@ -68,12 +68,12 @@ var _destroyEvent = function (eventId) {
 EventStore.dispatchToken = AppDispatcher.register(function (action) {
 
   switch (action.actionType) {
-    case AppActions.EVENT_CREATE:
+    case ActionNames.EVENT_CREATE:
       _createEvent(action.eventData);
       EventStore.emitChange();
       break;
 
-    case AppActions.EVENT_DESTROY:
+    case ActionNames.EVENT_DESTROY:
       _destroyEvent(action.eventId);
       EventStore.emitChange();
       break;

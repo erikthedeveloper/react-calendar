@@ -1,4 +1,0 @@
-module.exports = {
-  EVENT_CREATE:  'EVENT_CREATE',
-  EVENT_DESTROY: 'EVENT_DESTROY'
-};
