@@ -1,11 +1,29 @@
 var React = require('react');
 var moment = require('moment');
-
 var EventStore   = require('../stores/EventStore');
-var UserSelectedStore = require('../stores/UserSelectedStore');
 var EventActions = require('../actions/EventActions');
+var UserSelectedStore   = require('../stores/UserSelectedStore');
 var UserSelectedActions = require('../actions/UserSelectedActions');
-var ArrowButton = require('./ArrowButton');
+var ArrowButton     = require('./ArrowButton');
+var FormAddDayEvent = require('./FormAddDayEvent');
+
+/**
+ * <PaneNavUpButton />
+ * @private
+ */
+var PaneNavUpButton = React.createClass({
+  render() {
+    return (
+      <small style={{marginRight: 15}}>
+        <ArrowButton onClick={this.onNavBack} direction="left" style={{float: 'left'}} />
+      </small>
+    );
+  },
+
+  onNavBack () {
+    UserSelectedActions.paneNavUp();
+  }
+});
 
 /**
  * <EventListItem event={eventObject} />
@@ -47,45 +65,6 @@ var EventListItem = React.createClass({
 });
 
 /**
- * <AddDayEventForm moment={moment(dateArgs)} />
- * @private
- */
-var AddDayEventForm = React.createClass({
-  propTypes: {
-    moment: React.PropTypes.object.isRequired
-  },
-
-  render() {
-    return (
-      <div>
-        <input
-          ref="newEventTitle"
-          onSubmit={this.addEvent}
-          type="text"
-          className="form-control input-md" />
-        <button
-          onClick={this.addEvent}
-          className="btn btn-md btn-block btn-primary">
-          Add Event
-        </button>
-      </div>
-    );
-  },
-
-  addEvent() {
-    var newEventData = {
-      title: React.findDOMNode(this.refs['newEventTitle']).value,
-      moment: this.props.moment
-    };
-
-    EventActions.create(newEventData);
-    React.findDOMNode(this.refs['newEventTitle']).value = "";
-    React.findDOMNode(this.refs['newEventTitle']).focus();
-
-  }
-});
-
-/**
  * <DetailsPane />
  */
 var DetailsPane = React.createClass({
@@ -113,17 +92,8 @@ var DetailsPane = React.createClass({
     });
   },
 
-  onNavBack () {
-    UserSelectedActions.paneNavUp();
-  },
-
   getPaneContents: function () {
     var selectedMoment = UserSelectedStore.getMoment();
-    var backArrow = (
-      <small style={{marginRight: 15}}>
-        <ArrowButton onClick={this.onNavBack} direction="left" style={{float: 'left'}} />
-      </small>
-    );
     var fallbackListing = <p><strong>Whoops!</strong> No events found!</p>;
 
     switch (this.state.selectedType) {
@@ -158,8 +128,8 @@ var DetailsPane = React.createClass({
         var dayEvents = EventStore.getForDay(selectedMoment);
         return (
           <div>
-            <h3>{backArrow} {selectedMoment.format('MMMM ddd Do')}</h3>
-            <AddDayEventForm moment={selectedMoment} />
+            <h3><PaneNavUpButton /> {selectedMoment.format('MMMM ddd Do')}</h3>
+            <FormAddDayEvent moment={selectedMoment} />
             <hr />
             {(dayEvents.length === 0)
               ? fallbackListing
@@ -173,7 +143,7 @@ var DetailsPane = React.createClass({
         var event = UserSelectedStore.getEvent();
         return (
           <div>
-            <h3>{backArrow} {event.title}</h3>
+            <h3><PaneNavUpButton /> {event.title}</h3>
             <p>
               <strong>{selectedMoment.format('MMMM ddd Do')}</strong> Some event details here...
             </p>

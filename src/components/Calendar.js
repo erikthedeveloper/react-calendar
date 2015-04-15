@@ -1,15 +1,14 @@
 var React = require('react');
-var moment = require('moment');
-
 var EventStore = require('../stores/EventStore');
-var UserSelectedStore = require('../stores/UserSelectedStore');
-
+var UserSelectedStore   = require('../stores/UserSelectedStore');
 var UserSelectedActions = require('../actions/UserSelectedActions');
-
 var GridMonth   = require('./GridMonth');
 var DetailsPane = require('./DetailsPane');
 var ArrowButton = require('./ArrowButton');
 
+/**
+ * Bootstrap 3 Grid Calendar component w/ self-contained "Details Pane"
+ */
 var Calendar = React.createClass({
 
   render: function () {
@@ -26,16 +25,10 @@ var Calendar = React.createClass({
             <ArrowButton direction="right" onClick={this.nextMonth} style={{float: 'right'}} />
           </h3>
 
-          <GridMonth
-            selectedMoment={monthMoment}
-            events={this.state.events}
-            />
+          <GridMonth selectedMoment={monthMoment} events={this.state.events} />
         </div>
         <div className="col-sm-3">
-          <DetailsPane
-            selectedMoment={monthMoment}
-            events={this.state.events}
-            />
+          <DetailsPane selectedMoment={monthMoment} events={this.state.events} />
         </div>
       </div>
     )
