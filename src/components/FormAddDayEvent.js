@@ -9,11 +9,18 @@ var FormAddDayEvent = React.createClass({
     moment: React.PropTypes.object.isRequired
   },
 
+  getInitialState() {
+    return {
+      newTitle: ''
+    }
+  },
+
   render() {
     return (
       <div>
         <input
           ref="newEventTitle"
+          onChange={this.onTitleChanged}
           onSubmit={this.addEvent}
           type="text"
           className="form-control input-md" />
@@ -26,15 +33,23 @@ var FormAddDayEvent = React.createClass({
     );
   },
 
+  onTitleChanged(e) {
+    this.setState({newTitle: e.target.value.trim()});
+  },
+
   addEvent() {
+    var titleInput   = React.findDOMNode(this.refs['newEventTitle']);
     var newEventData = {
-      title: React.findDOMNode(this.refs['newEventTitle']).value,
+      title: this.state.newTitle,
       moment: this.props.moment
     };
 
+    if (newEventData.title.length === 0 )
+      return;
+
     EventActions.create(newEventData);
-    React.findDOMNode(this.refs['newEventTitle']).value = "";
-    React.findDOMNode(this.refs['newEventTitle']).focus();
+    titleInput.value = "";
+    titleInput.focus();
 
   }
 });
