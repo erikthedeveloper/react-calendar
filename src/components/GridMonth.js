@@ -2,6 +2,9 @@ var React = require('react');
 var _     = require('lodash');
 var moment = require('moment');
 
+var EventStore = require('../stores/EventStore');
+var UserSelectedStore = require('../stores/UserSelectedStore');
+
 var GridDay  = require('./GridDay');
 var DummyDay = require('./GridDay').GridDayDummy;
 
@@ -15,8 +18,12 @@ var styles = {
 
 var GridMonth = React.createClass({
 
-  render: function () {
-    var monthMoment = this.props.curMoment;
+  propTypes: {
+    selectedMoment: React.PropTypes.object.isRequired
+  },
+
+  render() {
+    var monthMoment = this.props.selectedMoment;
     return (
       <div>
         {moment.weekdaysShort().map((day) =>
@@ -29,8 +36,6 @@ var GridMonth = React.createClass({
   renderDayBlocks(monthMoment) {
     var dayBlocks = [];
     var daysInMonth = monthMoment.daysInMonth();
-    var eventData   = this.props.eventData;
-
     var padDays = function (daysToPad) {
       while (daysToPad--) dayBlocks.push(<DummyDay />);
     };
@@ -39,11 +44,11 @@ var GridMonth = React.createClass({
 
     for (var i = 1; i <= daysInMonth; i++) {
       var dayMoment = moment(monthMoment).date(i);
+      var isMonthMode = UserSelectedStore.getPaneType() !== 'month';
       dayBlocks.push(<GridDay
-        curMoment={dayMoment}
-        events={eventData.eventsForDay(dayMoment)}
-        onClick={_.partial(this.props.onSelectDay, dayMoment)}
-        onSelectEvent={this.props.onSelectEvent}
+        selectedMoment={dayMoment}
+        events={EventStore.getForDay(dayMoment)}
+        isActive={isMonthMode && dayMoment.isSame(this.props.selectedMoment, 'day')}
         />);
     }
 

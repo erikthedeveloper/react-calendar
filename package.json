@@ -12,6 +12,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "flux": "^2.0.1",
     "lodash": "^3.6.0",
     "moment": "^2.9.0",
     "react": "^0.13.1"

@@ -1,12 +1,75 @@
 var React = require('react');
 var moment = require('moment');
+var EventStore   = require('../stores/EventStore');
+var EventActions = require('../actions/EventActions');
+var UserSelectedStore   = require('../stores/UserSelectedStore');
+var UserSelectedActions = require('../actions/UserSelectedActions');
+var ArrowButton     = require('./ArrowButton');
+var FormAddDayEvent = require('./FormAddDayEvent');
 
-var ArrowButton = require('./ArrowButton');
+/**
+ * <PaneNavUpButton />
+ * @private
+ */
+var PaneNavUpButton = React.createClass({
+  render() {
+    return (
+      <small style={{marginRight: 15}}>
+        <ArrowButton onClick={this.onNavBack} direction="left" style={{float: 'left'}} />
+      </small>
+    );
+  },
 
+  onNavBack () {
+    UserSelectedActions.paneNavUp();
+  }
+});
 
+/**
+ * <EventListItem event={eventObject} />
+ * @private
+ */
+var EventListItem = React.createClass({
+  propTypes: {
+    event: React.PropTypes.object.isRequired
+  },
+
+  render() {
+    var event = this.props.event;
+    return (
+      <li>
+        <span
+          className="glyphicon glyphicon-remove"
+          style={{cursor: 'pointer'}}
+          onClick={this.onClickRemoveEvent}
+          ></span>
+        -
+        <span
+          style={{cursor: 'pointer'}}
+          onClick={this.onClickViewEvent}
+          >
+          {event.title}
+        </span>
+      </li>
+    );
+  },
+
+  onClickViewEvent() {
+    UserSelectedActions.selectEvent(this.props.event.id);
+  },
+
+  onClickRemoveEvent() {
+    EventActions.destroy(this.props.event.id)
+  }
+
+});
+
+/**
+ * <DetailsPane />
+ */
 var DetailsPane = React.createClass({
 
-  render: function () {
+  render() {
     var paneContents = this.getPaneContents();
     return (
       <div>
@@ -15,99 +78,78 @@ var DetailsPane = React.createClass({
     )
   },
 
-  propTypes: {
-
-  },
-
   getInitialState() {
     return {
-
+      selectedType: UserSelectedStore.getPaneType()
     }
   },
 
-  getPaneContents: function () {
-    var curMoment = this.props.curMoment;
-    var eventData = this.props.eventData;
-    var backArrow = (
-      <small style={{marginRight: 15}}>
-        <ArrowButton onClick={this.props.backToMonth} direction="left" style={{float: 'left'}} />
-      </small>
-    );
+  componentDidMount() {
+    UserSelectedStore.addChangeListener(() => {
+      return this.setState({
+        selectedType:   UserSelectedStore.getPaneType()
+      });
+    });
+  },
 
-    switch (this.props.selectedType) {
+  getPaneContents() {
+    var selectedMoment = UserSelectedStore.getMoment();
+    var fallbackListing = <p><strong>Whoops!</strong> No events found!</p>;
+
+    switch (this.state.selectedType) {
 
       case 'month':
-        var monthEvents = eventData.eventsForMonth(curMoment);
+        var groupedByDay = {};
+        EventStore.getForMonth(selectedMoment).forEach((event) => {
+          if (!groupedByDay[event.moment.date()]) groupedByDay[event.moment.date()] = [];
+          groupedByDay[event.moment.date()].push(event);
+        });
         return (
           <div>
-            <h3>{curMoment.format('MMMM')}</h3>
-            {Object.keys(monthEvents)
-              .map((dayNum) => moment(curMoment).date(dayNum))
-              .map((day) =>
+            <h3>{selectedMoment.format('MMMM')}</h3>
+            {(Object.keys(groupedByDay).length === 0)
+              ? fallbackListing
+              : Object.keys(groupedByDay)
+                .map((dayNum) => {
+                  var dayDate = moment(selectedMoment).date(dayNum);
+                  return (
                     <div>
-                      <h5>{day.format('ddd Do')}</h5>
+                      <h5 className="lead">{dayDate.format('ddd Do')}</h5>
                       <ul>
-                        {monthEvents[day.date()].map((event) =>
-                          <li onClick={this.removeEvent.bind(null, event)} style={{cursor: 'pointer'}}>{event.title}</li>)}
+                        {groupedByDay[dayDate.date()].map((event) => <EventListItem event={event} />)}
                       </ul>
-                    </div>)
-            }
+                    </div>
+                  )
+                })}
           </div>
         );
 
       case 'day':
-        var dayEvents = eventData.eventsForDay(curMoment);
+        var dayEvents = EventStore.getForDay(selectedMoment);
         return (
           <div>
-            <h3>
-              {backArrow}
-              {curMoment.format('MMMM ddd Do')}
-            </h3>
-            <input onSubmit={this.addEvent} ref="newEventTitle" type="text" className="form-control input-md" />
-            <button onClick={this.addEvent} className="btn btn-md btn-block btn-primary">Add Event</button>
-            <ul>
-            {dayEvents.map((event) =>
-              <li onClick={this.removeEvent.bind(null, event)} style={{cursor: 'pointer'}}>{event.title}</li>) }
-            </ul>
+            <h3><PaneNavUpButton /> {selectedMoment.format('MMMM ddd Do')}</h3>
+            <FormAddDayEvent moment={selectedMoment} />
+            <hr />
+            {(dayEvents.length === 0)
+              ? fallbackListing
+              : <ul>
+                  {dayEvents.map((event) => <EventListItem event={event} />) }
+                </ul>}
           </div>
         );
 
       case 'event':
-        var event = this.props.selectedEvent;
+        var event = UserSelectedStore.getEvent();
         return (
           <div>
-            <h3>
-              {backArrow}
-              {event.title}
-            </h3>
+            <h3><PaneNavUpButton /> {event.title}</h3>
             <p>
-              Some event details...
+              <strong>{selectedMoment.format('MMMM ddd Do')}</strong> Some event details here...
             </p>
           </div>
         );
-
-      default:
-        return (
-          <div>
-            Nothing selected!
-          </div>
-        );
     }
-  },
-
-  addEvent() {
-    var newEventData = {
-      title: React.findDOMNode(this.refs['newEventTitle']).value
-    };
-
-    this.props.eventData.addEvent(newEventData, this.props.curMoment);
-    React.findDOMNode(this.refs['newEventTitle']).value = "";
-    React.findDOMNode(this.refs['newEventTitle']).focus();
-
-  },
-
-  removeEvent(targetEvent) {
-    this.props.eventData.removeEvent(targetEvent);
   }
 
 });

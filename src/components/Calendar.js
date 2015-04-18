@@ -1,58 +1,19 @@
 var React = require('react');
-var moment = require('moment');
-
-var EventData = require('../EventData');
-
+var EventStore = require('../stores/EventStore');
+var UserSelectedStore   = require('../stores/UserSelectedStore');
+var UserSelectedActions = require('../actions/UserSelectedActions');
 var GridMonth   = require('./GridMonth');
 var DetailsPane = require('./DetailsPane');
 var ArrowButton = require('./ArrowButton');
 
-var DATA_SOURCE = {
-  2015: {
-    3: {
-      3: [
-        {title: 'April 3rd'},
-        {title: 'And another... April 3rd'}
-      ],
-      10: [ {title: 'My Birthday!'}]
-    },
-    4: {
-      5: [{title: 'Sinco De Mayo!'}],
-      14: [
-        {title: 'Just another day...'},
-        {title: 'The 14th!'}
-      ]
-    }
-  }
-};
-
-// TODO: Yuck, I know :)
-for (var year in DATA_SOURCE)
-  for (var monthIndex in DATA_SOURCE[year])
-    for (var date in DATA_SOURCE[year][monthIndex])
-      for (var eventIndex in DATA_SOURCE[year][monthIndex][date])
-        DATA_SOURCE[year][monthIndex][date][eventIndex]['moment'] = moment([year, monthIndex, date]);
-var _eventData = new EventData(DATA_SOURCE);
-
+/**
+ * Bootstrap 3 Grid Calendar component w/ self-contained "Details Pane"
+ */
 var Calendar = React.createClass({
 
-  getInitialState: function () {
-    return {
-      curMoment: moment(),
-      selectedType: 'month',
-      eventData: _eventData
-    }
-  },
+  render() {
 
-  componentDidMount() {
-    _eventData.addSubscription(() => {
-      this.setState({eventData: _eventData})
-    });
-  },
-
-  render: function () {
-
-    var monthMoment = this.state.curMoment;
+    var monthMoment = this.state.selectedMoment;
 
     return (
       <div className="row">
@@ -64,49 +25,36 @@ var Calendar = React.createClass({
             <ArrowButton direction="right" onClick={this.nextMonth} style={{float: 'right'}} />
           </h3>
 
-          <GridMonth
-            curMoment={monthMoment}
-            onSelectDay={this.onSelectDay}
-            onSelectEvent={this.onSelectEvent}
-            eventData={this.state.eventData}
-            />
+          <GridMonth selectedMoment={monthMoment} events={this.state.events} />
         </div>
         <div className="col-sm-3">
-          <DetailsPane
-            curMoment={monthMoment}
-            selectedType={this.state.selectedType}
-            selectedEvent={this.state.selectedEvent}
-            eventData={this.state.eventData}
-            backToMonth={() => this.setState({selectedType: 'month'})}
-            />
+          <DetailsPane selectedMoment={monthMoment} events={this.state.events} />
         </div>
       </div>
     )
   },
 
-  prevMonth: function () {
-    this.setState({curMoment: this.state.curMoment.subtract(1, 'month')});
-    return false;
+  getInitialState() {
+    return {
+      selectedMoment: UserSelectedStore.getMoment(),
+      selectedType: UserSelectedStore.getPaneType(),
+      events: EventStore.getAll()
+    }
   },
 
-  nextMonth: function () {
-    this.setState({curMoment: this.state.curMoment.add(1, 'month')});
-    return false;
+  componentDidMount() {
+    EventStore.addChangeListener(() => this.setState({events: EventStore.getAll()}));
+    UserSelectedStore.addChangeListener(() => this.setState({
+      selectedMoment: UserSelectedStore.getMoment()
+    }));
   },
 
-  onSelectDay(dayMoment) {
-    this.setState({
-      curMoment: dayMoment,
-      selectedType: 'day'
-    });
+  prevMonth() {
+    UserSelectedActions.monthNavPrev();
   },
 
-  onSelectEvent(event) {
-    this.setState({
-      curMoment: event.moment,
-      selectedType: 'event',
-      selectedEvent: event
-    });
+  nextMonth() {
+    UserSelectedActions.monthNavNext();
   }
 
 });

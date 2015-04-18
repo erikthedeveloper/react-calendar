@@ -2,6 +2,8 @@ var React  = require('react');
 var _      = require('lodash');
 var moment = require('moment');
 
+var UserSelectedActions = require('../actions/UserSelectedActions');
+
 var styles = {
   gridBlock: {
     height: 150,
@@ -30,16 +32,16 @@ var styles = {
 
 var GridDay = React.createClass({
 
-  render: function() {
+  propTypes: {
+    isActive: React.PropTypes.bool
+  },
 
-    var _moment = this.props.curMoment;
-    var _styles = _.assign({}, styles.gridBlock);
-    if (_moment.day() === 0)
-      _styles.clear = 'left';
+  render() {
+    var dayMoment = this.props.selectedMoment;
 
     return (
-      <div style={_styles} onClick={this.props.onClick}>
-        <span style={styles.date}>{_moment.format('Do')}</span>
+      <div style={this._getStyles()} onClick={this.onClickDay.bind(null, dayMoment)}>
+        <span style={styles.date}>{dayMoment.format('Do')}</span>
         <ul className="list-unstyled" style={{marginTop: 30, marginLeft: 10}}>
         {this.props.events.map((event) =>
           <li
@@ -53,19 +55,28 @@ var GridDay = React.createClass({
     )
   },
 
-  propTypes: {
-    onClick: React.PropTypes.func
+  onClickDay(dayMoment) {
+    UserSelectedActions.selectDay(dayMoment);
   },
 
   onClickEvent(eventData, e) {
     e.stopPropagation();
-    this.props.onSelectEvent(eventData);
+    UserSelectedActions.selectEvent(eventData.id);
+  },
+
+  _getStyles() {
+    var _styles = _.assign({}, styles.gridBlock);
+    if (this.props.selectedMoment.day() === 0)
+      _styles.clear = 'left';
+    if (this.props.isActive)
+      _styles.backgroundColor = 'lightgray';
+    return _styles;
   }
 
 });
 
 var GridDayDummy = React.createClass({
-  render: function () {
+  render () {
     return (
       <div style={styles.gridBlock}>
       </div>
