@@ -11,11 +11,11 @@ var _events = {};
  */
 var EventStore = _.assign({}, ChangeEmitter, {
 
-  get: function (id) {
+  get(id) {
    return _events[id];
   },
 
-  getAll: function () {
+  getAll() {
     return _events;
   },
 
@@ -23,7 +23,7 @@ var EventStore = _.assign({}, ChangeEmitter, {
    * @param dayMoment
    * @return {[]}
    */
-  getForDay: function (dayMoment) {
+  getForDay(dayMoment) {
     return _.filter(_events, (event) => moment(dayMoment).isSame(event.moment, 'day'))
   },
 
@@ -31,7 +31,7 @@ var EventStore = _.assign({}, ChangeEmitter, {
    * @param monthMoment
    * @return {[]}
    */
-  getForMonth: function (monthMoment) {
+  getForMonth(monthMoment) {
     return _.filter(_events, (event) => moment(monthMoment).isSame(event.moment, 'month'))
   }
 

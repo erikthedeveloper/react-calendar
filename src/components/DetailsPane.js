@@ -69,7 +69,7 @@ var EventListItem = React.createClass({
  */
 var DetailsPane = React.createClass({
 
-  render: function () {
+  render() {
     var paneContents = this.getPaneContents();
     return (
       <div>
@@ -92,7 +92,7 @@ var DetailsPane = React.createClass({
     });
   },
 
-  getPaneContents: function () {
+  getPaneContents() {
     var selectedMoment = UserSelectedStore.getMoment();
     var fallbackListing = <p><strong>Whoops!</strong> No events found!</p>;
 

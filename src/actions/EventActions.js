@@ -6,14 +6,14 @@ var _actions = {
 };
 
 var EventActions = {
-  create: function (eventData) {
+  create(eventData) {
     AppDispatcher.dispatch({
       actionType: _actions.EVENT_CREATE,
       eventData: eventData
     });
   },
 
-  destroy: function (eventId) {
+  destroy(eventId) {
     AppDispatcher.dispatch({
       actionType: _actions.EVENT_DESTROY,
       eventId: eventId

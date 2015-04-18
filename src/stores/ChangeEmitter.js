@@ -6,11 +6,11 @@ var EventEmitter = require('events').EventEmitter;
  */
 var CHANGE_EVENT = 'CHANGE_EVENT';
 var ChangeEmitter = _.assign({}, EventEmitter.prototype, {
-  emitChange: function () {
+  emitChange() {
     this.emit(CHANGE_EVENT);
   },
 
-  addChangeListener: function (callback) {
+  addChangeListener(callback) {
     this.on(CHANGE_EVENT, callback);
   }
 });

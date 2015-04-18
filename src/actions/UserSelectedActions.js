@@ -10,33 +10,33 @@ var _actions = {
 
 var UserSelectedActions = {
 
-  selectDay: function (dateArgs) {
+  selectDay(dateArgs) {
     AppDispatcher.dispatch({
       actionType: _actions.SELECT_DAY,
       dateArgs:   dateArgs
     });
   },
 
-  selectEvent: function (eventId) {
+  selectEvent(eventId) {
     AppDispatcher.dispatch({
       actionType: _actions.SELECT_EVENT,
       eventId:    eventId
     });
   },
 
-  paneNavUp: function () {
+  paneNavUp() {
     AppDispatcher.dispatch({
       actionType: _actions.PANE_NAV_UP
     });
   },
 
-  monthNavPrev: function () {
+  monthNavPrev() {
     AppDispatcher.dispatch({
       actionType: _actions.MONTH_NAV_PREV
     });
   },
 
-  monthNavNext: function () {
+  monthNavNext() {
     AppDispatcher.dispatch({
       actionType: _actions.MONTH_NAV_NEXT
     });

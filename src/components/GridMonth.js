@@ -22,7 +22,7 @@ var GridMonth = React.createClass({
     selectedMoment: React.PropTypes.object.isRequired
   },
 
-  render: function () {
+  render() {
     var monthMoment = this.props.selectedMoment;
     return (
       <div>

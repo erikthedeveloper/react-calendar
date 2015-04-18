@@ -36,7 +36,7 @@ var GridDay = React.createClass({
     isActive: React.PropTypes.bool
   },
 
-  render: function() {
+  render() {
     var dayMoment = this.props.selectedMoment;
 
     return (
@@ -76,7 +76,7 @@ var GridDay = React.createClass({
 });
 
 var GridDayDummy = React.createClass({
-  render: function () {
+  render () {
     return (
       <div style={styles.gridBlock}>
       </div>
