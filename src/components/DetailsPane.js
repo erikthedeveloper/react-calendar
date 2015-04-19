@@ -144,10 +144,7 @@ var DetailsPane = React.createClass({
         var event = UserSelectedStore.getEvent();
         return (
           <div>
-            <h3><PaneNavUpButton /> {event.title}</h3>
-            <p>
-              <strong>{selectedMoment.format('MMMM ddd Do')}</strong> Some event details here...
-            </p>
+            <h5><PaneNavUpButton /> {event.title}</h5>
             <FormEditEvent event={event} />
           </div>
         );

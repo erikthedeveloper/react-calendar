@@ -35,11 +35,13 @@ var FormEditEvent = React.createClass({
           onSubmit={this.updateEvent}
           value={this.state.title}
           type="text"
-          className="form-control input-md" />
+          className="form-control input-md"
+          />
         <input
           type="date"
           value={this.state.dateArgs}
           onChange={this.onDateChanged}
+          className="form-control input-md"
           />
         <textarea
           value={this.state.notes}
@@ -69,20 +71,16 @@ var FormEditEvent = React.createClass({
   },
 
   updateEvent() {
-    var titleInput   = React.findDOMNode(this.refs['eventTitle']);
     var updateEventData = {
       title: this.state.title,
       dateArgs: this.state.dateArgs,
       notes: this.state.notes
     };
 
-    if (updateEventData.title.length === 0 )
+    if (updateEventData.title.length === 0)
       return;
 
     EventActions.update(this.props.event.id, updateEventData);
-    titleInput.value = "";
-    titleInput.focus();
-
   }
 });
 
