@@ -34,13 +34,13 @@ var FormAddDayEvent = React.createClass({
   },
 
   onTitleChanged(e) {
-    this.setState({newTitle: e.target.value.trim()});
+    this.setState({newTitle: e.target.value});
   },
 
   addEvent() {
     var titleInput   = React.findDOMNode(this.refs['newEventTitle']);
     var newEventData = {
-      title: this.state.newTitle,
+      title: this.state.newTitle.trim(),
       moment: this.props.moment
     };
 

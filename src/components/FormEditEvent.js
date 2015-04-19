@@ -59,7 +59,7 @@ var FormEditEvent = React.createClass({
   },
 
   onTitleChanged(e) {
-    this.setState({title: e.target.value.trimRight()});
+    this.setState({title: e.target.value});
   },
 
   onDateChanged(e) {
@@ -72,9 +72,9 @@ var FormEditEvent = React.createClass({
 
   updateEvent() {
     var updateEventData = {
-      title: this.state.title,
+      title: this.state.title.trim(),
       dateArgs: this.state.dateArgs,
-      notes: this.state.notes
+      notes: this.state.notes.trim()
     };
 
     if (updateEventData.title.length === 0)
