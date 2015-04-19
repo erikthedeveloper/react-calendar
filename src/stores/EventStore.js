@@ -58,6 +58,16 @@ var _createEvent = function (eventData) {
   return eventId;
 };
 
+
+var _updateEvent = function (eventId, eventData) {
+  var targetEvent = _events[eventId];
+  if (!targetEvent)
+    alert(`Event [${eventId}] doesn't exist!`);
+
+  _events[eventId] = _.assign({}, targetEvent, eventData);
+  return true;
+};
+
 /**
  * @param eventId {number}
  */
@@ -70,6 +80,11 @@ EventStore.dispatchToken = AppDispatcher.register(function (action) {
   switch (action.actionType) {
     case ActionNames.EVENT_CREATE:
       _createEvent(action.eventData);
+      EventStore.emitChange();
+      break;
+
+    case ActionNames.EVENT_UPDATE:
+      _updateEvent(action.eventId, action.eventData);
       EventStore.emitChange();
       break;
 
