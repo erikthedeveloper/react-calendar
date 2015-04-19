@@ -49,8 +49,7 @@ UserSelectedStore.dispatchToken = AppDispatcher.register(function (action) {
     case ActionNames.SELECT_EVENT:
       _eventId = action.eventId;
       _paneType    = 'event';
-      if (!_moment)
-        _moment = EventStore.get(_eventId).moment;
+      _moment = EventStore.get(_eventId).moment;
       UserSelectedStore.emitChange();
       break;
 
