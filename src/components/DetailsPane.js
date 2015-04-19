@@ -6,6 +6,7 @@ var UserSelectedStore   = require('../stores/UserSelectedStore');
 var UserSelectedActions = require('../actions/UserSelectedActions');
 var ArrowButton     = require('./ArrowButton');
 var FormAddDayEvent = require('./FormAddDayEvent');
+var FormEditEvent = require('./FormEditEvent');
 
 /**
  * <PaneNavUpButton />
@@ -147,6 +148,7 @@ var DetailsPane = React.createClass({
             <p>
               <strong>{selectedMoment.format('MMMM ddd Do')}</strong> Some event details here...
             </p>
+            <FormEditEvent event={event} />
           </div>
         );
     }
