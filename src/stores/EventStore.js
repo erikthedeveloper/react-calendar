@@ -61,10 +61,12 @@ var _createEvent = function (eventData) {
 
 var _updateEvent = function (eventId, eventData) {
   var targetEvent = _events[eventId];
-  if (!targetEvent)
-    alert(`Event [${eventId}] doesn't exist!`);
+  var updateData  = {};
+  var {dateArgs, title} = eventData;
+  if (dateArgs) updateData.moment = moment(dateArgs);
+  if (title)    updateData.title  = title;
 
-  _events[eventId] = _.assign({}, targetEvent, eventData);
+  _events[eventId] = _.assign({}, targetEvent, updateData);
   return true;
 };
 

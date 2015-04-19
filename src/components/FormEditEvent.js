@@ -9,7 +9,8 @@ var FormEditEvent = React.createClass({
   getInitialState() {
     var curEvent = this.props.event;
     return {
-      title: curEvent.title
+      title: curEvent.title,
+      dateArgs: curEvent.moment.format("YYYY-MM-DD")
     }
   },
 
@@ -23,6 +24,11 @@ var FormEditEvent = React.createClass({
           value={this.state.title}
           type="text"
           className="form-control input-md" />
+        <input
+          type="date"
+          value={this.state.dateArgs}
+          onChange={this.onDateChanged}
+          />
         <button
           onClick={this.updateEvent}
           className="btn btn-md btn-block btn-primary">
@@ -36,10 +42,15 @@ var FormEditEvent = React.createClass({
     this.setState({title: e.target.value.trimRight()});
   },
 
+  onDateChanged(e) {
+    this.setState({dateArgs: e.target.value});
+  },
+
   updateEvent() {
     var titleInput   = React.findDOMNode(this.refs['eventTitle']);
     var updateEventData = {
-      title: this.state.title
+      title: this.state.title,
+      dateArgs: this.state.dateArgs
     };
 
     if (updateEventData.title.length === 0 )
