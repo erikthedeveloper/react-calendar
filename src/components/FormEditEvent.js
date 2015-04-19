@@ -1,17 +1,29 @@
 var React = require('react');
 var EventActions = require('../actions/EventActions');
 
+/**
+ * <FormEditEvent event={event} />
+ *  Update title, date, and notes
+ */
 var FormEditEvent = React.createClass({
   propTypes: {
     event: React.PropTypes.object.isRequired
   },
 
-  getInitialState() {
-    var curEvent = this.props.event;
-    return {
-      title: curEvent.title,
-      dateArgs: curEvent.moment.format("YYYY-MM-DD")
-    }
+  componentWillMount() {
+    this.setStateFromEvent(this.props.event);
+  },
+
+  componentWillReceiveProps(nextProps) {
+    this.setStateFromEvent(nextProps.event);
+  },
+
+  setStateFromEvent(event) {
+    this.setState({
+      title: event.title,
+      dateArgs: event.moment.format("YYYY-MM-DD"),
+      notes: event.notes || ""
+    })
   },
 
   render() {
@@ -28,6 +40,12 @@ var FormEditEvent = React.createClass({
           type="date"
           value={this.state.dateArgs}
           onChange={this.onDateChanged}
+          />
+        <textarea
+          value={this.state.notes}
+          onChange={this.onNotesChanged}
+          className="form-control input-md"
+          rows="4"
           />
         <button
           onClick={this.updateEvent}
@@ -46,11 +64,16 @@ var FormEditEvent = React.createClass({
     this.setState({dateArgs: e.target.value});
   },
 
+  onNotesChanged(e) {
+    this.setState({notes: e.target.value});
+  },
+
   updateEvent() {
     var titleInput   = React.findDOMNode(this.refs['eventTitle']);
     var updateEventData = {
       title: this.state.title,
-      dateArgs: this.state.dateArgs
+      dateArgs: this.state.dateArgs,
+      notes: this.state.notes
     };
 
     if (updateEventData.title.length === 0 )

@@ -62,9 +62,10 @@ var _createEvent = function (eventData) {
 var _updateEvent = function (eventId, eventData) {
   var targetEvent = _events[eventId];
   var updateData  = {};
-  var {dateArgs, title} = eventData;
+  var {dateArgs, title, notes} = eventData;
   if (dateArgs) updateData.moment = moment(dateArgs);
   if (title)    updateData.title  = title;
+  if (notes)    updateData.notes  = notes;
 
   _events[eventId] = _.assign({}, targetEvent, updateData);
   return true;
