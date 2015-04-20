@@ -114,10 +114,10 @@ var DetailsPane = React.createClass({
                 .map((dayNum) => {
                   var dayDate = moment(selectedMoment).date(dayNum);
                   return (
-                    <div>
+                    <div key={dayNum}>
                       <h5 className="lead">{dayDate.format('ddd Do')}</h5>
                       <ul>
-                        {groupedByDay[dayDate.date()].map((event) => <EventListItem event={event} />)}
+                        {groupedByDay[dayDate.date()].map((event) => <EventListItem event={event} key={event.id} />)}
                       </ul>
                     </div>
                   )
@@ -135,7 +135,7 @@ var DetailsPane = React.createClass({
             {(dayEvents.length === 0)
               ? fallbackListing
               : <ul>
-                  {dayEvents.map((event) => <EventListItem event={event} />) }
+                  {dayEvents.map((event) => <EventListItem event={event} key={event.id} />) }
                 </ul>}
           </div>
         );

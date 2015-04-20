@@ -45,6 +45,7 @@ var GridDay = React.createClass({
         <ul className="list-unstyled" style={{marginTop: 30, marginLeft: 10}}>
         {this.props.events.map((event) =>
           <li
+            key={event.id}
             onClick={this.onClickEvent.bind(null, event)}
             className="label label-info"
             style={styles.label}>

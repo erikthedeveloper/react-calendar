@@ -27,7 +27,7 @@ var GridMonth = React.createClass({
     return (
       <div>
         {moment.weekdaysShort().map((day) =>
-          <div style={styles.dayHeading}>{day}</div>)}
+          <div key={day} style={styles.dayHeading}>{day}</div>)}
         {this.renderDayBlocks(monthMoment)}
       </div>
     )
@@ -37,7 +37,7 @@ var GridMonth = React.createClass({
     var dayBlocks = [];
     var daysInMonth = monthMoment.daysInMonth();
     var padDays = function (daysToPad) {
-      while (daysToPad--) dayBlocks.push(<DummyDay />);
+      while (daysToPad--) dayBlocks.push(<DummyDay key={`block_${dayBlocks.length}`} />);
     };
 
     padDays(monthMoment.clone().date(1).day());
@@ -46,6 +46,7 @@ var GridMonth = React.createClass({
       var dayMoment = moment(monthMoment).date(i);
       var isMonthMode = UserSelectedStore.getPaneType() !== 'month';
       dayBlocks.push(<GridDay
+        key={`block_${dayBlocks.length}`}
         selectedMoment={dayMoment}
         events={EventStore.getForDay(dayMoment)}
         isActive={isMonthMode && dayMoment.isSame(this.props.selectedMoment, 'day')}
