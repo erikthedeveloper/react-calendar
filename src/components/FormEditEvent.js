@@ -1,11 +1,14 @@
 var React = require('react');
 var EventActions = require('../actions/EventActions');
+let InputBinder  = require('./mixins/InputBinder');
 
 /**
  * <FormEditEvent event={event} />
  *  Update title, date, and notes
  */
 var FormEditEvent = React.createClass({
+  mixins: [InputBinder],
+
   propTypes: {
     event: React.PropTypes.object.isRequired
   },
@@ -31,7 +34,7 @@ var FormEditEvent = React.createClass({
       <div>
         <input
           ref="eventTitle"
-          onChange={this.onTitleChanged}
+          onChange={this.bindInputValue('title')}
           onSubmit={this.updateEvent}
           value={this.state.title}
           type="text"
@@ -40,12 +43,12 @@ var FormEditEvent = React.createClass({
         <input
           type="date"
           value={this.state.dateArgs}
-          onChange={this.onDateChanged}
+          onChange={this.bindInputValue('dateArgs')}
           className="form-control input-md"
           />
         <textarea
           value={this.state.notes}
-          onChange={this.onNotesChanged}
+          onChange={this.bindInputValue('notes')}
           className="form-control input-md"
           rows="4"
           />
@@ -56,18 +59,6 @@ var FormEditEvent = React.createClass({
         </button>
       </div>
     );
-  },
-
-  onTitleChanged(e) {
-    this.setState({title: e.target.value});
-  },
-
-  onDateChanged(e) {
-    this.setState({dateArgs: e.target.value});
-  },
-
-  onNotesChanged(e) {
-    this.setState({notes: e.target.value});
   },
 
   updateEvent() {

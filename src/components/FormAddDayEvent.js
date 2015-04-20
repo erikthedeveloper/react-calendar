@@ -1,10 +1,12 @@
 var React = require('react');
 var EventActions = require('../actions/EventActions');
-
+let InputBinder  = require('./mixins/InputBinder');
 /**
  * <AddDayEventForm moment={moment(dateArgs)} />
  */
 var FormAddDayEvent = React.createClass({
+  mixins: [InputBinder],
+
   propTypes: {
     moment: React.PropTypes.object.isRequired
   },
@@ -20,7 +22,7 @@ var FormAddDayEvent = React.createClass({
       <div>
         <input
           ref="newEventTitle"
-          onChange={this.onTitleChanged}
+          onChange={this.bindInputValue('newTitle')}
           onSubmit={this.addEvent}
           type="text"
           className="form-control input-md" />
@@ -31,10 +33,6 @@ var FormAddDayEvent = React.createClass({
         </button>
       </div>
     );
-  },
-
-  onTitleChanged(e) {
-    this.setState({newTitle: e.target.value});
   },
 
   addEvent() {
