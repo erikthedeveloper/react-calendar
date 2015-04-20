@@ -6,8 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "browserify src/main.js -o build/main.js -t babelify",
-    "watch": "watchify src/main.js -o build/main.js -t babelify -v",
-    "server": "browser-sync start --server --files='build/main.js'"
+    "develop": "watchify src/main.js -o build/main.js -t babelify -v",
+    "server": "browser-sync start --files='build/main.js' --server --reload-delay=500 --reload-debounce=2000"
   },
   "author": "",
   "license": "ISC",
