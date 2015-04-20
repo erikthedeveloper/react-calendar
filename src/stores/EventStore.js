@@ -58,6 +58,19 @@ var _createEvent = function (eventData) {
   return eventId;
 };
 
+
+var _updateEvent = function (eventId, eventData) {
+  var targetEvent = _events[eventId];
+  var updateData  = {};
+  var {dateArgs, title, notes} = eventData;
+  if (dateArgs) updateData.moment = moment(dateArgs);
+  if (title)    updateData.title  = title;
+  if (notes)    updateData.notes  = notes;
+
+  _events[eventId] = _.assign({}, targetEvent, updateData);
+  return true;
+};
+
 /**
  * @param eventId {number}
  */
@@ -70,6 +83,11 @@ EventStore.dispatchToken = AppDispatcher.register(function (action) {
   switch (action.actionType) {
     case ActionNames.EVENT_CREATE:
       _createEvent(action.eventData);
+      EventStore.emitChange();
+      break;
+
+    case ActionNames.EVENT_UPDATE:
+      _updateEvent(action.eventId, action.eventData);
       EventStore.emitChange();
       break;
 
