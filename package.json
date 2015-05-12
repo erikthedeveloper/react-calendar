@@ -4,10 +4,11 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "browserify src/main.js -o build/main.js -t babelify",
-    "develop": "watchify src/main.js -o build/main.js -t babelify -v",
-    "server": "browser-sync start --files='build/main.js' --server --reload-delay=500 --reload-debounce=2000"
+    "clean": "rm -rf ./dist",
+    "build": "npm run clean && ./node_modules/.bin/webpack --optimize-minimize",
+    "build-dev": "npm run clean && ./node_modules/.bin/webpack --watch --verbose",
+    "server": "./node_modules/.bin/browser-sync start --config='./bs-config.js'",
+    "develop": "npm run server & npm run build-dev"
   },
   "author": "",
   "license": "ISC",
@@ -18,6 +19,10 @@
     "react": "^0.13.1"
   },
   "devDependencies": {
-    "babelify": "^6.0.2"
+    "webpack": "^1.8.5",
+    "browser-sync": "2.6.5",
+    "babel-core": "^5.1.10",
+    "babel-loader": "^5.0.0",
+    "babel-runtime": "^5.1.13"
   }
 }

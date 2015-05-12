@@ -1,11 +1,9 @@
 #### To Run/Develop
 
 ```
-npm install
-bower install
-
-npm run watch
-npm run server
+npm install && bower install
+npm run develop
+# You may have to reload your browser manually, once.
 ```
 
 See `package.json` for details :)
@@ -15,6 +13,8 @@ See `package.json` for details :)
 Note: It was intentionally implemented **without** Flux first so that I could work through refactoring my *non-Flux hacks* into Flux. Also, this is my first shot/attempt at Flux. Don't judge me!
 
 ...TODO details/context :smile:
+
+Head on over to check out some of the [Pull Requests from building...](https://github.com/erikthedeveloper/react-calendar/pulls?q=is%3Apr+is%3Aclosed)
 
 some screenshots...
 
